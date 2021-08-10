@@ -146,7 +146,7 @@
 				var chk = true;
 			}
 
-					if (chk || base >= branch || isNaN(base) || isNaN(branch) || base <= 100000 || base + 8 > branch || base >= 0xFFFFFFFF || branch >= 0xFFFFFFFF) {
+			if (chk || base >= branch || isNaN(base) || isNaN(branch) || base <= 100000 || base + 8 > branch || base >= 0xFFFFFFFF || branch >= 0xFFFFFFFF) {
 				document.getElementById("outputValue").innerHTML = "エラー";
 				document.getElementById("outputCode").innerHTML = "エラー";
 				return;
