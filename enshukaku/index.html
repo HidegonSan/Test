@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="content-type" charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+
+		<title>円周角 練習</title>
+		<meta name="author" content="Hidegon" />
+		<meta name="description" content="中学三年生で学習する円周角の計算の練習が出来ます。" />
+
+		<!-- OGP -->
+		<meta property="og:description" content="中学三年生で学習する円周角の計算の練習が出来ます。" />
+		<meta property="og:title" content="円周角 練習" />
+		<meta property="og:url" content="https://hidegonsan.github.io/enshukaku/" />
+		<meta property="og:type" content="article" />
+		<meta property="og:site_name" content="円周角 練習" />
+		<meta property="og:locale" content="ja_JP" />
+
+		<!-- Twitter card -->
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@Hidegon_" />
+		
+		<!-- CSS -->
+		<style type="text/css">
+		
+		body {
+			text-align: center;
+		}
+		
+		#question {
+			font-size: 3em;
+		}
+		
+		#judge {
+			font-size: 2em;
+		}
+		
+		input {
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			border-radius: 5px;
+			border: 1px solid black;
+			outline: none;
+			color: #000;
+			caret-color: #000;
+			width: 5em;
+			height: 2em;
+		}
+		
+		.button {
+				-moz-border-radius: 5px;
+				-webkit-border-radius: 5px;
+				border-radius: 5px;
+				border: 1px solid black;
+				outline: none;
+				color: #000;
+				caret-color: #000;
+				padding: 0.5em 0.5em 0.5em 0.5em;
+				margin: 0.5em 0.5em 0.5em 0.5em;
+				background-color: white;
+		}
+		
+		#canvas {
+			background-color: white;
+			width: 100%;
+			height: auto;
+		}
+		
+		</style>
+	</head>
+
+	<body>
+		<div id="question">∠APBを求めよ</div>
+		<canvas width="301" height="301" id="canvas"></canvas>
+		<br>
+		<div id="judge"></div>
+		<p><input type="number" id="answer_area">&nbsp;°</p>
+		<button id="answer_button" class="button">回答</button>
+		<br>
+		<button id="change_question" class="button">問題を変更する</button>
+		<br>
+		<br><br>
+		<small>(C) 2021 Hidegon.</small>
+	</body>
+
+	<script language="javascript" type="text/javascript">
+		
+		// 円周角
+		var inscribed_angle = 0;
+		
+				
+		function change_css(elm_name, css_dict) {
+			try {
+				// make cssText from dictionary
+				var cssList = [];
+				var _keys = Object.keys(css_dict);
+				for (var i=0; i<_keys.length; i++) {
+					var key = _keys[i];
+					var val = css_dict[key];
+					cssList.push(`${key}: ${val}`);
+				}
+				var _css = cssList.join("; ");
+				// class
+				if (elm_name.startsWith(".")) {
+					var classes = document.getElementsByClassName(elm_name.slice(1));
+					for (var i=0; i<classes.length; i++) {
+						try {
+							var elm = classes[i];
+							var cssText = elm.style.cssText;
+							elm.style.cssText = cssText + _css;
+						}
+						catch (e) {}
+					}
+				}
+				// id
+				else if (elm_name.startsWith("#")) {
+					try {
+						var idElm = document.getElementById(elm_name.slice(1));
+						var cssText = idElm.style.cssText;
+						idElm.style.cssText = cssText + _css;
+					}
+					catch (e) {}
+				}
+				// tag
+				else {
+					var tags = document.getElementsByTagName(elm_name);
+					for (var i=0; i<tags.length; i++) {
+						try {
+							var elm = tags[i];
+							var cssText = elm.style.cssText;
+							elm.style.cssText = cssText + _css;
+						}
+						catch (e) {}
+					}
+				}
+			}
+			catch (e) {}
+		}
+
+
+		function rand_range(min, max) {
+			return Math.floor(Math.random()*(max + 1 - min)) + min;
+		}
+		
+		
+		// 角度から円の円周上の座標を取得する
+		function get_circle_pos(degree, radius) {
+			var radian = degree * Math.PI / 180;
+			var radius = radius;
+			return [Math.cos(radian)*radius + 150, Math.sin(radian)*radius + 150];
+		}
+				
+		
+		function clear_canvas() {
+			var canvas = document.getElementById('canvas');
+			if (canvas.getContext) {
+				var ctx = canvas.getContext('2d');
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+			}
+		}
+		
+		
+		// メインの円の描画
+		function draw_big_circle() {
+			var canvas = document.getElementById('canvas');
+			if (canvas.getContext) {
+				var ctx = canvas.getContext('2d');
+				ctx.beginPath();
+				// 外の円
+				// X, Y, Radius, StartAngle, EndAngle
+				ctx.arc(150, 150, 100, 0, Math.PI*2);
+				ctx.stroke();
+				// 中心の点
+				// X, Y, Radius, StartAngle, EndAngle
+				ctx.beginPath();
+				ctx.fillStyle = "rgb(0, 0, 0)";
+				ctx.arc(150, 150, 2, 0, Math.PI*2);
+				ctx.fill();
+			}
+		}
+		
+		
+		function draw_line(x, y, x2, y2) {
+			var canvas = document.getElementById('canvas');
+			if (canvas.getContext) {
+				var ctx = canvas.getContext('2d');
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+				ctx.lineTo(x2, y2);
+				ctx.stroke();
+			}
+		}
+		
+		
+		function draw_text(x, y, text) {
+			var canvas = document.getElementById('canvas');
+			if (canvas.getContext) {
+				var ctx = canvas.getContext('2d');
+				ctx.beginPath();
+				ctx.fillStyle = "rgb(255, 255, 255)";
+				ctx.fillRect(x - 2, y - 9, text.length == 1 ? 10 : 7*text.length, 10);
+				ctx.fillStyle = "rgb(0, 0, 0)";
+				ctx.fillText(text, x, y);
+			}
+		}
+		
+		
+		function draw_angle(start, end, angle) {
+			var canvas = document.getElementById('canvas');
+			if (canvas.getContext) {
+				var ctx = canvas.getContext('2d');
+				ctx.beginPath();
+				// X, Y, Radius, StartAngle, EndAngle
+				ctx.arc(150, 150, 20, start*(Math.PI / 180), end*(Math.PI / 180));
+				ctx.stroke();
+				var angle_text_pos = get_circle_pos((end - start) / 2, 35);
+				draw_text(angle_text_pos[0] - 20, angle_text_pos[1], angle + "°");
+			}
+		}
+		
+		
+		// 問題を作成する 初期描画と check_answer 内で呼び出される
+		function create_question() {
+			while (true) {
+				
+				// 二回目以降は前の問題が残るので一旦クリア
+				clear_canvas();
+				
+				// メインの円描画
+				draw_big_circle();
+				
+				// 右下の座標
+				var under_right_angle = rand_range(5, 40);
+				
+				// 左下の座標
+				var under_left_angle = rand_range(50, 175);
+				
+				// 右下から中心へ描画
+				var under_right_pos = get_circle_pos(under_right_angle, 100);
+				draw_line(150, 150, under_right_pos[0], under_right_pos[1]);
+				
+				// 左下から中心へ描画
+				var under_left_pos = get_circle_pos(under_left_angle, 100);
+				draw_line(150, 150, under_left_pos[0], under_left_pos[1]);
+				
+				// 上の座標
+				var top_angle = rand_range(180, 360);
+				var top_pos = get_circle_pos(top_angle, 100);
+				
+				// 上から右下へ描画
+				draw_line(
+					under_right_pos[0],
+					under_right_pos[1],
+					top_pos[0],
+					top_pos[1]
+				);
+				
+				// 上から左下へ描画
+				draw_line(
+					under_left_pos[0],
+					under_left_pos[1],
+					top_pos[0],
+					top_pos[1]
+				);
+				
+				// 'A' を描画する
+				var under_left_text_pos = get_circle_pos(under_left_angle, 115);
+				draw_text(under_left_text_pos[0], under_left_text_pos[1], "A");
+				
+				// 'B' を描画する
+				var under_right_text_pos = get_circle_pos(under_right_angle, 110);
+				draw_text(under_right_text_pos[0], under_right_text_pos[1], "B");
+				
+				// 'P' を描画する
+				var top_text_pos = get_circle_pos(top_angle, 110);
+				draw_text(top_text_pos[0], top_text_pos[1], "P");
+				
+				// 中心角
+				var central_angle = under_left_angle - under_right_angle;
+				
+				// 円周角
+				inscribed_angle = central_angle / 2;
+				
+				// 中心角を描画する
+				draw_angle(under_right_angle, under_left_angle, central_angle.toString());
+				
+				if (Number.isInteger(inscribed_angle)) {
+					break;
+				}
+			}
+		}
+		
+		
+		function check_answer() {
+			try {
+				var answer = Number(document.getElementById("answer_area").value);
+			}
+			catch {
+				document.getElementById("answer_area").value = "";
+				create_question();
+				return;
+			}
+			if (answer == inscribed_angle) {
+				document.getElementById("judge").innerHTML = "正解！&nbsp;∠APB = " + inscribed_angle.toString() + "°";
+				change_css("#judge", {"color": "red"});
+			}
+			else {
+				document.getElementById("judge").innerHTML = "不正解...";
+				change_css("#judge", {"color": "blue"});
+				return;
+			}
+			document.getElementById("answer_area").value = "";
+			create_question();
+		}
+		
+		
+		// 初期描画
+		create_question();
+		
+		
+		// イベント類
+		var answer_button = document.getElementById("answer_button");
+		answer_button.addEventListener("click", function() {
+			check_answer();
+		});
+		
+		var change_question_button = document.getElementById("change_question");
+		change_question_button.addEventListener("click", function() {
+			create_question();
+		});
+		
+		
+		// (C) 2021 Hidegon.
+		// This source code is part of https://hidegonsan.github.io/enshukaku/
+	</script>
+</html>
