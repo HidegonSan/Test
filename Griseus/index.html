@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="content-type" charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+		<title>Griseus</title>
+		<!-- Griseus <->  灰白 <-> Kaihaku <-> 改造○物館 -->
+		<meta name="author" content="Hidegon" />
+		<meta name="description" content="3dsの改造に関する投稿が可能な掲示板" />
+
+		<!-- OGP -->
+		<meta property="og:description" content="3dsの改造に関する投稿が可能な掲示板" />
+		<meta property="og:title" content="Griseus" />
+		<meta property="og:url" content="https://HidegonSan.github.io/Griseus/" />
+		<meta property="og:type" content="article" />
+		<meta property="og:site_name" content="Griseus" />
+
+		<!-- Twitter card -->
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@Hidegon_" />
+
+		<!-- CSS -->
+		<style type="text/css">
+			* {
+				box-sizing: border-box;
+				line-height: 1.6;
+			}
+
+			body {
+				/* background-color: #F8F8F8; */
+				text-align: center;
+				margin: 0;
+			}
+
+			a {
+				/* color: inherit; */
+				text-decoration: none;
+			}
+
+			.site_wrapper {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				min-height: 100vh;
+			}
+
+			main {
+				flex: 1;
+				overflow-x: hidden;
+				padding: 10% 0 10% 0;
+			}
+
+			header {
+				margin-top: 0;
+				margin-bottom: 0;
+			}
+
+			footer {
+				border-top: 2px solid #777777;
+				padding: 2em 0 2em 0;
+				margin: 0;
+				width: 100%;
+			}
+
+			#title {
+				font-size: 3em;
+			}
+
+			#sub_title {
+				font-size: 1em;			
+			}
+			
+			#form {
+				text-align: left;
+				margin-bottom: 1em;
+			}
+			
+			#content_label {
+				display: block;
+				text-align: center;
+			}
+			
+			#warning {
+				font-size: 0.6em;
+			}
+			
+			.form_item {
+				margin: 0.2em 0 0.2em 0;
+			}
+			
+			#page_selector {
+				margin-top: 2em;
+				margin-bottom: 2em;
+				display: block;
+			}
+			
+			#contents {
+				text-align: left;
+				margin: 2em 0 2em 0;
+			}
+			
+			.content {
+				margin: 2em 0 2em 0;
+			}
+			
+			.game_title {
+				margin-bottom: 0.5em;
+			}
+		</style>
+	</head>
+
+
+	<body>
+		<div class="site_wrapper">
+			<header>
+				<div id="title">Griseus</div>
+				<div id="sub_title">3dsの改造に関する投稿が可能な掲示板</div>
+			</header>
+
+			<main>
+				<div id="form">
+					<label for="form_name">名前&nbsp;:&nbsp;</label>
+					<input type="text" name="name" id="form_name" class="form_item" maxlength=10>
+					<br>
+					<label for="form_game_title">ゲーム名&nbsp;:&nbsp;</label>
+					<input type="text" name="form_game_title" id="form_game_title" class="form_item" maxlength=20>
+					<br>
+					<textarea name="form_content" cols="40" rows="5" wrap="hard" class="form_item" placeholder="ここに入力" id="form_content" maxlength=400></textarea>
+					<br>
+					<button id="send">送信</button>
+					<br>
+					<span id="warning">サーバーへ情報を送信した時点で、<a href="./Terms">利用規約</a>に同意したものとします。</span>
+				</div>
+				
+				<hr>
+				<p style="margin-top:2em;text-align:left;font-size:0.6em;">ページが1MBを越えると、投稿がリセットされます。</p>
+				<p style="margin-bottom:2em;text-align:left;font-size:0.6em">過去の投稿を参照するには、レポジトリをCloneし、Gitを使用してください</p>
+				<hr>
+				
+				<div id="contents">
+				
+				<div class="content"><!-- Yzg0YmQyODE2YWQyZTFkNDhhNjEzYjhkODE2MmFkNTU=3821529832 --><span>名前:&nbsp;Hidegon</span><span>&nbsp;&nbsp;2022年&nbsp;1月&nbsp;23日&nbsp;&nbsp;0:42</span><div class="game_title">テスト</div><div>やっほー</div></div><hr>
+
+
+					
+				<!-- end of contents-->
+				</div>
+			</main>
+
+			<footer>
+				<small>&copy;&nbsp;2021&nbsp;Hidegon</small>
+			</footer>
+		</div>
+		
+		
+		<script type="text/javascript" language="javascript">
+			var id0 = get_cookie()["id0"];
+			var id1 = get_cookie()["id1"];
+			
+			if (id0 == undefined) {
+				set_cookie("id0", Date());
+			}
+			if (id1 == undefined) {
+				set_cookie("id1", make_random_string(32));
+			}
+			
+			var un = get_cookie()["user_name"];
+			var gt = get_cookie()["game_title"];
+			
+			if (un != undefined) {
+				document.getElementById("form_name").value = un;
+			}
+			if (gt != undefined) {
+				document.getElementById("form_game_title").value = gt;
+			}
+			
+			function post(content) {
+				var API_URL = "https%3A%2F%2Fdiscord.com%2Fapi%2Fwebhooks%2F934321167974662144%2FJ03uKYcXc2jDGdMH4TSwd066HT6LVeCLlctNliENichljYcAYvuSubGTOzGCm7pIBjFP";
+				var form_data = new FormData();
+				form_data.append("content", content);
+				form_data.append("username", "API");
+				form_data.append("avatar", "");
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", decodeURIComponent(API_URL));
+				xhr.onload = function (e) { }
+				alert(
+						"送信しました♪\n" +
+						"(※反映には数分かかる場合があります)\n" +
+						"(※再読み込みが必要です)"
+				);
+				xhr.send(form_data);
+			}
+			
+			function make_random_string(length) {
+				var S="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+				return Array.from(crypto.getRandomValues(new Uint8Array(length))).map((n)=>S[n%S.length]).join('');
+			}
+			
+			function set_cookie(k, v) {
+				document.cookie = k + "=" + encodeURIComponent(v) + "; max-age=2147483647";
+			}
+		
+			function get_cookie() {
+				var arr = new Array();
+				var tmp = document.cookie.split("; ");
+				for(var i=0;i<tmp.length;i++) {
+					var data = tmp[i].split("=");
+					arr[data[0]] = decodeURIComponent(data[1]);
+				}
+				return arr;
+			}
+			
+			document.getElementById("form_name").onchange = function() {
+				set_cookie("user_name", document.getElementById("form_name").value);
+			};
+			
+			document.getElementById("form_game_title").onchange = function() {
+				set_cookie("game_title", document.getElementById("form_game_title").value);
+			};
+			
+			var send_button = document.getElementById("send");
+			send_button.addEventListener("click", function() {
+				var user_name = document.getElementById("form_name").value;
+				var game_title = document.getElementById("form_game_title").value;
+				var content = document.getElementById("form_content").value;
+				var id0 = get_cookie()["id0"];
+				var id1 = get_cookie()["id1"];
+				var send_data = ['"' + user_name + '"', '"' + id0 + '"', '"' + id1 + '"', '"' + game_title + '"', '"' + content + '"'];
+				if (!user_name || !game_title || !content || !id0 || !id1) {
+					alert("入力漏れがあります。");
+					return;
+				}
+				post("<API>[" + send_data.toString() + "]");
+			});
+		
+		</script>
+	</body>
+</html>
