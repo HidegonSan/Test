@@ -211,6 +211,14 @@ body {
 }
 
 
+/* アイテムエディタ 編集中アイテム クリック移動 */
+/* #item_editor_title span:nth-child(2) {
+	position: absolute;
+	top: 0;
+	right: 0.5em;
+} */
+
+
 /* アイテムエディタ 本体 */
 #item_editor {
 	padding-left: 1em;
