@@ -1705,6 +1705,56 @@ item_fill_background_imp.addEventListener("change", function() {
 });
 // アイテムエディタ イベント 終了
 
+// タッチ移動
+// Thanks: https://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
+function get_cursor_position(canvas, event) {
+	const rect = canvas.getBoundingClientRect()
+	const x = event.clientX - rect.left
+	const y = event.clientY - rect.top
+	return [parseInt(x), parseInt(y)];
+}
+
+// 上画面
+top_screen.addEventListener("click", function(e) {
+	if (!document.getElementById("click_move").checked || !g_items[g_selecting_index][1][1]) return;
+	var type = g_items[g_selecting_index][0];
+	var pos = get_cursor_position(top_screen, e);
+	var x = pos[0];
+	var y = pos[1];
+
+	if (type == 2 || type == 3) { // Draw, DrawSysfont
+		g_items[g_selecting_index][1][4] = x;
+		g_items[g_selecting_index][1][5] = y;
+	}
+	else {
+		g_items[g_selecting_index][1][3] = x;
+		g_items[g_selecting_index][1][4] = y;
+	}
+
+	update();
+});
+
+// 下画面
+bottom_screen.addEventListener("click", function(e) {
+	if (!document.getElementById("click_move").checked || g_items[g_selecting_index][1][1]) return;
+	var type = g_items[g_selecting_index][0];
+	var pos = get_cursor_position(bottom_screen, e);
+	var x = pos[0];
+	var y = pos[1];
+
+	if (type == 2 || type == 3) { // Draw, DrawSysfont
+		g_items[g_selecting_index][1][4] = x;
+		g_items[g_selecting_index][1][5] = y;
+	}
+	else {
+		g_items[g_selecting_index][1][3] = x;
+		g_items[g_selecting_index][1][4] = y;
+	}
+
+	update();
+});
+// タッチ移動 終了
+
 // 描画等 更新
 var update_buttons = document.getElementsByClassName("update");
 for (var i=0; i<update_buttons.length; i++) {
