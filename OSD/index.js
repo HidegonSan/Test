@@ -1413,7 +1413,7 @@ item_types_inp.addEventListener("change", function() {
 		var is_draw = type == "draw";
 		g_items[g_selecting_index][0] = is_draw ? 2 : 3;
 		if (old_type == 2 || old_type == 3) {
-			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, is_draw ? 11 : 12);
+			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, is_draw ? 11 : 12).concat(is_draw ? [] : [true]);
 		}
 		else {
 			g_items[g_selecting_index][1] = [show, is_top, comment, "", x, y, 0, 0, "white", "black", "red"].concat(is_draw ? [] : [true]);
