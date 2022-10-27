@@ -1716,7 +1716,7 @@ function get_cursor_position(canvas, event) {
 
 // 上画面
 top_screen.addEventListener("click", function(e) {
-	if (!document.getElementById("click_move").checked || !g_items[g_selecting_index][1][1]) return;
+	if (g_selecting_index < 0|| !document.getElementById("click_move").checked || !g_items[g_selecting_index][1][1]) return;
 	var type = g_items[g_selecting_index][0];
 	var pos = get_cursor_position(top_screen, e);
 	var x = pos[0];
@@ -1736,7 +1736,7 @@ top_screen.addEventListener("click", function(e) {
 
 // 下画面
 bottom_screen.addEventListener("click", function(e) {
-	if (!document.getElementById("click_move").checked || g_items[g_selecting_index][1][1]) return;
+	if (g_selecting_index < 0 || !document.getElementById("click_move").checked || g_items[g_selecting_index][1][1]) return;
 	var type = g_items[g_selecting_index][0];
 	var pos = get_cursor_position(bottom_screen, e);
 	var x = pos[0];
