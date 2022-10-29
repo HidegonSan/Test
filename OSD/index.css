@@ -57,7 +57,7 @@ body {
 }
 
 
-/* "OSD Designer" */
+/* "OSD Designer" メインタイトル */
 #title {
 	font-size: 2em;
 	font-weight: bold;
@@ -94,7 +94,7 @@ body {
 }
 
 
-/* "Generated code" */
+/* "Generated code" タイトル */
 #output span {
 	position: absolute;
 	left: 0;
@@ -290,7 +290,7 @@ body {
 }
 
 
-/* アイテム 個数 表示 */
+/* アイテム 個数 クリック移動*/
 #items_title span {
 	font-size: 0.8em;
 	vertical-align: middle;
