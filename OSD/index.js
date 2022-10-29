@@ -1716,7 +1716,8 @@ function get_cursor_position(canvas, event) {
 
 // 上画面
 top_screen.addEventListener("click", function(e) {
-	if (g_selecting_index < 0|| !document.getElementById("click_move").checked || !g_items[g_selecting_index][1][1]) return;
+	if (!g_items[g_selecting_index][1][1]) g_items[g_selecting_index][1][1] = true; // 下画面のアイテムを上画面に移動させる
+	if (g_selecting_index < 0|| !document.getElementById("click_move").checked) return;
 	var type = g_items[g_selecting_index][0];
 	var pos = get_cursor_position(top_screen, e);
 	var x = pos[0];
@@ -1736,6 +1737,7 @@ top_screen.addEventListener("click", function(e) {
 
 // 下画面
 bottom_screen.addEventListener("click", function(e) {
+	if (g_items[g_selecting_index][1][1]) g_items[g_selecting_index][1][1] = false; // 上画面のアイテムを下画面に移動させる
 	if (g_selecting_index < 0 || !document.getElementById("click_move").checked || g_items[g_selecting_index][1][1]) return;
 	var type = g_items[g_selecting_index][0];
 	var pos = get_cursor_position(bottom_screen, e);
