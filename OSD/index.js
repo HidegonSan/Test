@@ -70,9 +70,9 @@ function draw_string(elm, string, x, y, size=10, color="white", font="px Noto") 
 
 // 円 描画
 function draw_cycle(elm, x, y, radius_start, radius_end, start=0, end=360, color="black") {
-	var rect_length = parseInt((radius_end*2) / 1.41421356237);
-	var mini_radius = parseInt(rect_length / 2);
 	// C++側では高速化のために以下の処理を行うが、JSでは汚くなるので使用しない
+	// var rect_length = parseInt((radius_end*2) / 1.41421356237);
+	//var mini_radius = parseInt(rect_length / 2);
 	// var rect_x = x - mini_radius;
 	// var rect_y = y - mini_radius;
 
@@ -80,8 +80,10 @@ function draw_cycle(elm, x, y, radius_start, radius_end, start=0, end=360, color
 	// 	draw_rect(elm, rect_x, rect_y, rect_length, rect_length, color);
 	// }
 	// else {
-		mini_radius = radius_start;
+	//	mini_radius = radius_start;
 	//}
+
+	var mini_radius = radius_start;
 
 	for (var r = mini_radius; r < radius_end; r++) {
 		for (var angle = start; angle < end; angle++) {
@@ -90,6 +92,7 @@ function draw_cycle(elm, x, y, radius_start, radius_end, start=0, end=360, color
 	}
 }
 // キャンバス類 終了 //
+
 
 // キャンバス 実機寄り関数類 //
 // u32 Draw(const std::string &str, u32 posX, u32 posY, const Color &foreground = Color::White, const Color &background = Color::Black) const;
@@ -221,8 +224,6 @@ function c_draw_line(elm, src_x, src_y, dst_x, dst_y, color) {
 
 // void DrawCycle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, Color &color)
 c_draw_cycle = draw_cycle;
-
-
 // キャンバス 実機寄り関数類 終了 //
 
 
@@ -243,7 +244,7 @@ function zfill(num, length) {
 // クリップボードにコピーする
 function copy(string) {
 	var tmp = document.createElement("div");
-	var pre = document.createElement('pre');
+	var pre = document.createElement("pre");
 	pre.style.webkitUserSelect = "auto";
 	pre.style.userSelect = "auto";
 	tmp.appendChild(pre).textContent = string;
@@ -350,12 +351,12 @@ function get_indices_of(searchStr, str, caseSensitive) {
 
 // Thanks: https://yamanoku.hatenablog.com/entry/2016/07/18/XSS%E5%AF%BE%E7%AD%96%E3%81%AE%E3%82%BB%E3%82%AD%E3%83%A5%E3%82%A2%E3%81%AAJS%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9%EF%BC%88%E5%9F%BA%E6%9C%AC%E7%9A%84%E3%81%AA%E3%81%93%E3%81%A8%EF%BC%89
 // XSSが発生しないようにサニタイズする
-function escapeHTML(str) {
-	str = str.replace(/&/g, '&amp;');
-	str = str.replace(/</g, '&lt;');
-	str = str.replace(/>/g, '&gt;');
-	str = str.replace(/"/g, '&quot;');
-	str = str.replace(/'/g, '&#39;');
+function escape_html(str) {
+	str = str.replace(/&/g, "&amp;");
+	str = str.replace(/</g, "&lt;");
+	str = str.replace(/>/g, "&gt;");
+	str = str.replace(/"/g, "&quot;");
+	str = str.replace(/'/g, "&#39;");
 	return str;
 }
 
@@ -400,7 +401,7 @@ function color_name_to_hex(color) {
 	"wheat":"#f5deb3","white":"#ffffff","whitesmoke":"#f5f5f5",
 	"yellow":"#ffff00","yellowgreen":"#9acd32"};
 
-	if (typeof colors[color.toLowerCase()] != 'undefined') {
+	if (typeof colors[color.toLowerCase()] != "undefined") {
 		return colors[color.toLowerCase()];
 	}
 
@@ -462,16 +463,16 @@ void DrawOSD(void) {
 
 // CTRPF 色形式 変換
 function to_ctrpf_color(color) {
-	if (Array.isArray(color)) {
+	if (Array.isArray(color)) { // (50, 50, 50)
 		return `Color(${color[0]}, ${color[1]}, ${color[2]})`;
 	}
-	else if (color.startsWith("#")) {
+	else if (color.startsWith("#")) { // #123456
 		var r = parseInt(color.slice(1, 1 + 2), 16);
 		var g = parseInt(color.slice(3, 3 + 2), 16);
 		var b = parseInt(color.slice(5, 5 + 2), 16);
 		return `Color(${r}, ${g}, ${b})`;
 	}
-	else {
+	else { // red, blue...
 		return "Color::" + color.slice(0, 1).toUpperCase() + color.slice(1, color.length);
 	}
 }
@@ -479,16 +480,16 @@ function to_ctrpf_color(color) {
 
 // CSS 色形式 変換
 function to_css_color(color) {
-	if (color.indexOf("::") != -1) {
+	if (color.indexOf("::") != -1) { // Color::Red
 		return color.slice(7, color.length).toLowerCase();
 	}
-	else if (Array.isArray(color)) {
+	else if (Array.isArray(color)) { // (50, 50, 50)
 		var r = color[0];
 		var g = color[1];
 		var b = color[2];
 		return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
 	}
-	else {
+	else { // red, blue...
 		return color;
 	}
 }
@@ -503,7 +504,7 @@ function add_item(kind, properties) {
 // アイテム 削除
 function remove_item(index) {
 	g_items.splice(index, 1)
-	if (g_selecting_index != -1 && (index < g_selecting_index || index == g_items.length)) {
+	if (g_selecting_index != -1 && (index < g_selecting_index || index == g_items.length)) { // 選択中より上にあるアイテムを削除すると選択アイテムがずれるのでそれを修正する
 		g_selecting_index--;
 	}
 }
@@ -513,11 +514,11 @@ function remove_item(index) {
 function up_item(index) {
 	if (2 <= g_items.length && 0 < index) {
 		g_items = replace_array_elements(g_items, index, index - 1);
-		if ((index - 1) == g_selecting_index) {
+		if ((index - 1) == g_selecting_index) { // 真上のアイテムが選択中の場合 選択インデックスを足す
 			g_selecting_index++;
 			return;
 		}
-		if (index == g_selecting_index) {
+		if (index == g_selecting_index) { // 選択中のアイテムの場合 選択インデックスを引く
 			g_selecting_index--;
 		}
 	}
@@ -528,11 +529,11 @@ function up_item(index) {
 function down_item(index) {
 	if (2 <= g_items.length && index < (g_items.length - 1)) {
 		g_items = replace_array_elements(g_items, index, index + 1);
-		if ((index + 1) == g_selecting_index) {
+		if ((index + 1) == g_selecting_index) { // 真下のアイテムが選択中の場合 選択インデックスを引く
 			g_selecting_index--;
 			return;
 		}
-		if (index == g_selecting_index) {
+		if (index == g_selecting_index) { // 選択中のアイテムの場合 選択インデックスを足す
 			g_selecting_index++;
 		}
 	}
@@ -597,18 +598,18 @@ function draw_ctrpf_background() {
 
 // コード 生成
 function output_generated_code() {
-	// Types: Pixel, Rect, Draw, DrawSysfont, Line, Cycle, Arc, Image
+	// Types: Pixel, Rect, Draw, DrawSysfont, Line, Cycle
 	g_generated_codes = []; // 一旦リセット
 
 	for (var i=0; i<g_items.length; i++) {
 		var item = g_items[i];
-		var type = item[0];
+		var type = item[0]; // Types
 		var properties = item[1];
-		var show = properties[0];
-		var comment_out = show ? "" : "// ";
-		var is_top_screen = properties[1];
-		var scr = is_top_screen ? "topScr" : "btmScr";
-		var comment = " // " + properties[2];
+		var show = properties[0]; // Bool
+		var comment_out = show ? "" : "// "; // 先頭に付けるコメントアウトステータス
+		var is_top_screen = properties[1]; // Bool
+		var scr = is_top_screen ? "topScr" : "btmScr"; // スクリーン コード
+		var comment = " // " + properties[2]; // 末尾コメント
 
 		if (type == -1) { // 未生成
 			g_generated_codes.push("/* UNDEFINED */");
@@ -636,7 +637,7 @@ function output_generated_code() {
 		}
 
 		else if (type == 2) { // Draw
-			// str, pos_x, pos_y, border_width, padding, foreground, background, border_color
+			// str, x, y, border_width, padding, foreground, background, border_color
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -650,7 +651,7 @@ function output_generated_code() {
 		}
 
 		else if (type == 3) { // DrawSysfont
-			// str, pos_x, pos_y, border_width, padding, foreground, background, border_color
+			// str, x, y, border_width, padding, foreground, background, border_color, fill_background
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -659,9 +660,8 @@ function output_generated_code() {
 			var foreground = to_ctrpf_color(properties[8]);
 			var background = to_ctrpf_color(properties[9]);
 			var border_color = to_ctrpf_color(properties[10]);
-			var fillBackground = properties[11];
-			
-			var code = comment_out + `DrawSysfontPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${fillBackground});${comment}`;
+			var fill_background = properties[11];
+			var code = comment_out + `DrawSysfontPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${fill_background});${comment}`;
 			g_generated_codes.push(code);
 		}
 
@@ -677,7 +677,7 @@ function output_generated_code() {
 		}
 
 		else if (type == 5) { // Cycle
-			// x, y, radius_start, radius_end, start=0, end=360, color
+			// x, y, radius_start, radius_end, start, end, color
 			var x = properties[3];
 			var y = properties[4];
 			var radius_start = properties[5];
@@ -703,15 +703,19 @@ function items_select_event() {
 		elements[i].addEventListener("click", function(e) {
 			var items = Array.prototype.slice.call(document.querySelectorAll("#items > div"));
 			var target = e.target;
-			if (target.className.indexOf("item_ignore") != -1) return; // チェックボックス等 無視
+			if (target.className.indexOf("item_ignore") != -1) { // チェックボックス等 無視
+				return;
+			}
 			while (target.parentNode.id != "items") { // 子要素をクリックした場合親要素になるまでループ
 				target = target.parentNode;
 			}
 			var selecting = document.getElementById("item_selecting");
-			if (selecting) selecting.id = ""; // 選択状態 剥奪
+			if (selecting) {
+				selecting.id = ""; // 選択状態 剥奪
+			}
 			target.id = "item_selecting"; // 選択状態 付与
 			var index = items.indexOf(target);
-			g_selecting_index = index; // 選択中アイテム グローバル変数
+			g_selecting_index = index; // 選択中アイテム インデックス 変更
 		})
 	}
 
@@ -750,17 +754,17 @@ function items_select_event() {
 // アイテムリスト 更新
 function update_items() {
 	var items = document.getElementById("items");
-	items.innerHTML = ''; // 一旦空にする
-	var template = '<hr><div class="item update_" id="{SELECTING}" title="{COMMENT}" ><button class="item_up item_ignore update_" >↑</button><button class="item_down item_ignore update_" >↓</button><input class="item_show item_ignore update_" type="checkbox" {SHOW}><button class="item_remove item_ignore update_" ()>🗑</button><div>{CODE}</div></div>';
+	items.innerHTML = ""; // 一旦空にする
+	var template = '<hr><div class="item update_" id="{SELECTING}" title="{COMMENT}" ><button class="item_up item_ignore update_" >↑</button><button class="item_down item_ignore update_" >↓</button><input class="item_show item_ignore update_" type="checkbox" {SHOW}><button class="item_remove item_ignore update_" ()>🗑</button><div>{CODE}</div></div>'; // アイテム テンプレート
 
 	for (var i=0; i<g_items.length; i++) {
-		var generated_code = g_generated_codes[i];
-		var show = (!generated_code.startsWith("//") && g_items[i][0] != -1) ? "checked" : "";
-		var comments = get_indices_of("//", generated_code);
-		var last_comment = comments[comments.length - 1];
-		var comment = escapeHTML(generated_code.slice(last_comment + 3, generated_code.length));
-		var code = escapeHTML(generated_code.slice(0, last_comment));
-		var selecting = i == g_selecting_index ? "item_selecting" : "";
+		var generated_code = g_generated_codes[i]; // 生成済みコード
+		var show = (!generated_code.startsWith("//") && g_items[i][0] != -1) ? "checked" : ""; // コメントアウトされておらず、未定義要素でもなければ表示する
+		var comments = get_indices_of("//", generated_code); // コメントリスト
+		var last_comment = comments[comments.length - 1]; // 最後の "//"
+		var comment = escape_html(generated_code.slice(last_comment + 3, generated_code.length)); // 末尾コメント
+		var code = escape_html(generated_code.slice(0, last_comment)); // コメントを除き、サニタイズした生成済みコード
+		var selecting = (i == g_selecting_index ? "item_selecting" : ""); // 選択中アイテムならIDを付与
 		items.insertAdjacentHTML("beforeend", template.replace("{COMMENT}", comment).replace("{SHOW}", show).replace("{CODE}", code).replace("{SELECTING}", selecting));
 	}
 	items.innerHTML += '<hr><button id="item_add" class="update_">Add Item</button>'; // アイテム追加ボタン
@@ -811,13 +815,16 @@ function show_elements(ids) {
 
 // アイテムエディタ セット
 function set_item_editor(index) {
+	// まず全てのアイテム入力要素を隠す
 	document.getElementById("item_color2_checkbox").classList.add("hide");
 	var editor_elements = document.getElementsByClassName("item_editor_block");
 	for (var i=0; i<editor_elements.length; i++) {
 		editor_elements[i].classList.add("hide");
 	}
 
-	if (g_selecting_index < 0) return;
+	if (g_selecting_index < 0) {
+		return;
+	}
 
 	var item = g_items[g_selecting_index];
 	var type = item[0];
@@ -879,7 +886,7 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 2) { // Draw
-		// str, pos_x, pos_y, border_width, padding, foreground, background, border_color
+		// str, x, y, border_width, padding, foreground, background, border_color
 		var str = properties[3];
 		var x = properties[4];
 		var y = properties[5];
@@ -897,6 +904,7 @@ function set_item_editor(index) {
 		set_value("item_padding", padding.toString());
 		document.querySelector("#item_color1_block > label").innerText = "Foreground: ";
 
+		// foreground
 		if (foreground.startsWith("#")) {
 			set_value("item_color1", "");
 			set_value("item_colorpicker1", foreground);
@@ -906,6 +914,7 @@ function set_item_editor(index) {
 			set_value("item_colorpicker1", color_name_to_hex(foreground));
 		}
 
+		// background
 		if (background.startsWith("#")) {
 			set_value("item_color2", "");
 			set_value("item_colorpicker2", background);
@@ -915,6 +924,7 @@ function set_item_editor(index) {
 			set_value("item_colorpicker2", color_name_to_hex(background));
 		}
 
+		// border_color
 		if (border_color.startsWith("#")) {
 			set_value("item_color3", "");
 			set_value("item_colorpicker3", border_color);
@@ -926,7 +936,7 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 3) { // DrawSysfont
-		// str, pos_x, pos_y, border_width, padding, foreground, background, border_color
+		// str, x, y, border_width, padding, foreground, background, border_color, fill_background
 		var str = properties[3];
 		var x = properties[4];
 		var y = properties[5];
@@ -935,7 +945,7 @@ function set_item_editor(index) {
 		var foreground = to_css_color(properties[8]);
 		var background = to_css_color(properties[9]);
 		var border_color = to_css_color(properties[10]);
-		var fillBackground = properties[11];
+		var fill_background = properties[11];
 		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block", "item_color2_checkbox"]);
 		set_value("item_types", "draw_sysfont");
 		set_value("item_text", str);
@@ -944,8 +954,9 @@ function set_item_editor(index) {
 		set_value("item_y", y.toString());
 		set_value("item_border_width", border_width.toString());
 		set_value("item_padding", padding.toString());
-		document.getElementById("item_color2_checkbox").checked = fillBackground;
+		document.getElementById("item_color2_checkbox").checked = fill_background;
 
+		// foreground
 		if (foreground.startsWith("#")) {
 			set_value("item_color1", "");
 			set_value("item_colorpicker1", foreground);
@@ -955,6 +966,7 @@ function set_item_editor(index) {
 			set_value("item_colorpicker1", color_name_to_hex(foreground));
 		}
 
+		// background
 		if (background.startsWith("#")) {
 			set_value("item_color2", "");
 			set_value("item_colorpicker2", background);
@@ -964,6 +976,7 @@ function set_item_editor(index) {
 			set_value("item_colorpicker2", color_name_to_hex(background));
 		}
 
+		// border_color
 		if (border_color.startsWith("#")) {
 			set_value("item_color3", "");
 			set_value("item_colorpicker3", border_color);
@@ -1001,7 +1014,7 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 5) { // Cycle
-		// x, y, radius_start, radius_end, start=0, end=360, color
+		// x, y, radius_start, radius_end, start, end, color
 		var x = properties[3];
 		var y = properties[4];
 		var radius_start = properties[5];
@@ -1030,15 +1043,15 @@ function set_item_editor(index) {
 
 	var is_top_screen = properties[1];
 	var comment = properties[2];
-	set_value("item_comment", comment);
-	document.getElementById("item_screen").checked = is_top_screen;
+	document.getElementById("item_screen").checked = is_top_screen; // 上画面かどうか チェックボックス
+	set_value("item_comment", comment); // コメント
 }
 
 
 // アイテム 描画
 function draw_items() {
 	g_generated_codes = [];
-	var g_items_reversed = [...g_items].reverse();
+	var g_items_reversed = [...g_items].reverse(); // 配列を反対にすることでアイテムリストの順番と描画が直感的になる
 
 	for (var i=0; i<g_items_reversed.length; i++) {
 		var item = g_items_reversed[i];
@@ -1072,7 +1085,7 @@ function draw_items() {
 		}
 
 		else if (type == 2) { // Draw
-			// str, pos_x, pos_y, border_width, padding, foreground, background, border_color
+			// str, x, y, border_width, padding, foreground, background, border_color
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -1085,7 +1098,7 @@ function draw_items() {
 		}
 
 		else if (type == 3) { // DrawSysfont
-			// str, pos_x, pos_y, border_width, padding, foreground, background, border_color
+			// str, x, y, border_width, padding, foreground, background, border_color, fill_background
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -1094,8 +1107,8 @@ function draw_items() {
 			var foreground = to_css_color(properties[8]);
 			var background = to_css_color(properties[9]);
 			var border_color = to_css_color(properties[10]);
-			var fillBackground = properties[11];
-			c_draw_sysfont_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, fillBackground);
+			var fill_background = properties[11];
+			c_draw_sysfont_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, fill_background);
 		}
 
 		else if (type == 4) { // Line
@@ -1109,7 +1122,7 @@ function draw_items() {
 		}
 
 		else if (type == 5) { // Cycle
-			// x, y, radius_start, radius_end, start=0, end=360, color
+			// x, y, radius_start, radius_end, start, end, color
 			var x = properties[3];
 			var y = properties[4];
 			var radius_start = properties[5];
@@ -1123,7 +1136,7 @@ function draw_items() {
 }
 
 
-// 現在の状況をCookieに保存
+// 現在の状態をCookieに保存
 function save() {
 	set_cookie("save", JSON.stringify([g_selecting_index, document.getElementById("draw_ctrpf").checked, g_items]));
 }
@@ -1132,10 +1145,10 @@ function save() {
 // Cookieに保存した状態を復元
 function restore() {
 	var save_data = JSON.parse(get_all_cookies()["save"]);
-	g_selecting_index = parseInt(save_data[0]);
-	document.getElementById("draw_ctrpf").checked = save_data[1];
+	g_selecting_index = parseInt(save_data[0]); // 選択中インデックス
+	document.getElementById("draw_ctrpf").checked = save_data[1]; // CTRPF 背景描画
 
-	if (save_data[2]) {
+	if (save_data[2]) { // アイテムリストが存在していれば
 		g_items = save_data[2];
 	}
 
@@ -1343,6 +1356,10 @@ reset_button.addEventListener("click", function() {
 		g_items = [];
 		g_selecting_index = -1;
 		delete_all_cookies();
+		set_backgroundcolor(top_screen, "white");
+		set_backgroundcolor(bottom_screen, "white");
+		g_top_screen_background_url = "";
+		g_bottom_screen_background_url = "";
 	}
 })
 
@@ -1368,8 +1385,8 @@ import_button_impl.addEventListener("change", function(e) {
 	reader.onload = function(ee) {
 		try {
 			var res = JSON.parse(reader.result);
-			g_selecting_index = parseInt(res[0]);
-			document.getElementById("draw_ctrpf").checked = res[1];
+			g_selecting_index = parseInt(res[0]); // 選択中 インデックス
+			document.getElementById("draw_ctrpf").checked = res[1]; // CTRPF 背景描画
 			g_items = res.slice(2);
 			update();
 		}
@@ -1406,11 +1423,12 @@ var item_filled_inp = document.getElementById("item_filled");
 var item_comment_inp = document.getElementById("item_comment");
 var item_fill_background_imp = document.getElementById("item_color2_checkbox");
 
+// Types
 item_types_inp.addEventListener("change", function() {
 	var type = document.getElementById("item_types").value;
 	var old_type = g_items[g_selecting_index][0];
 
-	if (old_type != -1) {
+	if (old_type != -1) { // 前のアイテムの種類が未定義でなければ引き継ぐ
 		var show = g_items[g_selecting_index][1][0];
 		var is_top = g_items[g_selecting_index][1][1];
 		var comment = g_items[g_selecting_index][1][2];
@@ -1428,7 +1446,7 @@ item_types_inp.addEventListener("change", function() {
 			color = get_value("item_colorpicker1");
 		}
 	}
-	else {
+	else { // 未定義の場合の初期値
 		var show = true;
 		var is_top = true;
 		var comment = "";
@@ -1446,13 +1464,13 @@ item_types_inp.addEventListener("change", function() {
 		g_items[g_selecting_index][1] = [show, is_top, comment, x, y, 0, 0, color, true];
 	}
 	else if (type == "draw" || type == "draw_sysfont") {
-		var is_draw = type == "draw";
+		var is_draw = (type == "draw");
 		g_items[g_selecting_index][0] = is_draw ? 2 : 3;
 		if (old_type == 2 || old_type == 3) {
-			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, is_draw ? 11 : 12).concat(is_draw ? [] : [true]);
+			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, is_draw ? 11 : 12).concat(is_draw ? [] : [true]); // fill_background
 		}
 		else {
-			g_items[g_selecting_index][1] = [show, is_top, comment, "", x, y, 0, 0, "white", "black", "red"].concat(is_draw ? [] : [true]);
+			g_items[g_selecting_index][1] = [show, is_top, comment, "", x, y, 0, 0, "white", "black", "red"].concat(is_draw ? [] : [true]); // fill_background
 		}
 	}
 	else if (type == "line") {
@@ -1467,16 +1485,19 @@ item_types_inp.addEventListener("change", function() {
 	update();
 });
 
+// Screen
 item_screen_inp.addEventListener("change", function() {
 	g_items[g_selecting_index][1][1] = document.getElementById("item_screen").checked;
 	update();
 });
 
+// Text
 item_str_inp.addEventListener("change", function() {
 	g_items[g_selecting_index][1][3] = get_value("item_text");
 	update();
 })
 
+// X
 item_x_inp.addEventListener("change", function() {
 	var type = g_items[g_selecting_index][0];
 	var value = parseInt(get_value("item_x"));
@@ -1494,6 +1515,7 @@ item_x_inp.addEventListener("change", function() {
 	update();
 });
 
+// Y
 item_y_inp.addEventListener("change", function() {
 	var type = g_items[g_selecting_index][0];
 	var value = parseInt(get_value("item_y"));
@@ -1511,6 +1533,7 @@ item_y_inp.addEventListener("change", function() {
 	update();
 });
 
+// X2
 item_x2_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_x2"));
 	if (isNaN(value) || value < 0) {
@@ -1521,6 +1544,7 @@ item_x2_inp.addEventListener("change", function() {
 	update();
 });
 
+// Y2
 item_y2_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_y2"));
 	if (isNaN(value) || value < 0) {
@@ -1531,6 +1555,7 @@ item_y2_inp.addEventListener("change", function() {
 	update();
 });
 
+// Width
 item_width_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_width"));
 	if (isNaN(value) || value < 0) {
@@ -1541,6 +1566,7 @@ item_width_inp.addEventListener("change", function() {
 	update();
 });
 
+// Height
 item_height_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_height"));
 	if (isNaN(value) || value < 0) {
@@ -1551,6 +1577,7 @@ item_height_inp.addEventListener("change", function() {
 	update();
 });
 
+// Border Width
 item_border_width_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_border_width"));
 	if (isNaN(value) || value < 0) {
@@ -1561,6 +1588,7 @@ item_border_width_inp.addEventListener("change", function() {
 	update();
 });
 
+// Padding
 item_padding_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_padding"));
 	if (isNaN(value) || value < 0) {
@@ -1571,13 +1599,14 @@ item_padding_inp.addEventListener("change", function() {
 	update();
 });
 
+// Radius Start
 item_radius_start_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_radius_start"));
 	var end = parseInt(get_value("item_radius_end"));
 	if (isNaN(value) || value < 0) {
 		value = 0;
 	}
-	if ((end - 1) <= value) {
+	if ((end - 1) <= value) { // 円が消えない範囲に調節する
 		value = end - 1;
 	}
 
@@ -1585,13 +1614,14 @@ item_radius_start_inp.addEventListener("change", function() {
 	update();
 });
 
+// Radius End
 item_radius_end_inp.addEventListener("change", function() {
 	var start = parseInt(get_value("item_radius_start"));
 	var value = parseInt(get_value("item_radius_end"));
 	if (isNaN(value) || value < 0) {
 		value = 0;
 	}
-	if (value <= (start + 1)) {
+	if (value <= (start + 1)) { // 円が消えない範囲に調節する
 		value = start + 1;
 	}
 
@@ -1599,6 +1629,7 @@ item_radius_end_inp.addEventListener("change", function() {
 	update();
 });
 
+// Arc Start
 item_arc_start_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_arc_start"));
 	if (isNaN(value)) {
@@ -1609,6 +1640,7 @@ item_arc_start_inp.addEventListener("change", function() {
 	update();
 });
 
+// Arc End
 item_arc_end_inp.addEventListener("change", function() {
 	var value = parseInt(get_value("item_arc_end"));
 	if (isNaN(value)) {
@@ -1619,6 +1651,7 @@ item_arc_end_inp.addEventListener("change", function() {
 	update();
 });
 
+// Color1
 item_color1_inp.addEventListener("change", function() {
 	var value = get_value("item_color1");
 	var type =g_items[g_selecting_index][0];
@@ -1642,6 +1675,7 @@ item_color1_inp.addEventListener("change", function() {
 	update();
 });
 
+// ColorPicker1
 item_colorpicker1_inp.addEventListener("change", function() {
 	var value = get_value("item_colorpicker1");
 	var type =g_items[g_selecting_index][0];
@@ -1665,40 +1699,47 @@ item_colorpicker1_inp.addEventListener("change", function() {
 	update();
 });
 
+// Color2
 item_color2_inp.addEventListener("change", function() {
 	var value = get_value("item_color2");
 	g_items[g_selecting_index][1][9] = value;
 	update();
 });
 
+// ColorPicker2
 item_colorpicker2_inp.addEventListener("change", function() {
 	var value = get_value("item_colorpicker2");
 	g_items[g_selecting_index][1][9] = value;
 	update();
 });
 
+// Color3
 item_color3_inp.addEventListener("change", function() {
 	var value = get_value("item_color3");
 	g_items[g_selecting_index][1][10] = value;
 	update();
 });
 
+// ColorPicker3
 item_colorpicker3_inp.addEventListener("change", function() {
 	var value = get_value("item_colorpicker3");
 	g_items[g_selecting_index][1][10] = value;
 	update();
 });
 
+// Filled
 item_filled_inp.addEventListener("change", function() {
 	g_items[g_selecting_index][1][8] = document.getElementById("item_filled").checked;
 	update();
 });
 
+// Comment
 item_comment_inp.addEventListener("change", function() {
 	g_items[g_selecting_index][1][2] = get_value("item_comment");
 	update();
 });
 
+// Background Filled
 item_fill_background_imp.addEventListener("change", function() {
 	g_items[g_selecting_index][1][11] = document.getElementById("item_color2_checkbox").checked;
 	update();
@@ -1716,8 +1757,12 @@ function get_cursor_position(canvas, event) {
 
 // 上画面
 top_screen.addEventListener("click", function(e) {
-	if (!g_items[g_selecting_index][1][1]) g_items[g_selecting_index][1][1] = true; // 下画面のアイテムを上画面に移動させる
-	if (g_selecting_index < 0|| !document.getElementById("click_move").checked) return;
+	if (!g_items[g_selecting_index][1][1]) { // 下画面のアイテムを上画面に移動させる
+		g_items[g_selecting_index][1][1] = true;
+	}
+	if (g_selecting_index < 0 || !document.getElementById("click_move").checked) {
+		return;
+	}
 	var type = g_items[g_selecting_index][0];
 	var pos = get_cursor_position(top_screen, e);
 	var x = pos[0];
@@ -1737,8 +1782,12 @@ top_screen.addEventListener("click", function(e) {
 
 // 下画面
 bottom_screen.addEventListener("click", function(e) {
-	if (g_items[g_selecting_index][1][1]) g_items[g_selecting_index][1][1] = false; // 上画面のアイテムを下画面に移動させる
-	if (g_selecting_index < 0 || !document.getElementById("click_move").checked || g_items[g_selecting_index][1][1]) return;
+	if (g_items[g_selecting_index][1][1]) { // 上画面のアイテムを下画面に移動させる
+		g_items[g_selecting_index][1][1] = false;
+	}
+	if (g_selecting_index < 0 || !document.getElementById("click_move").checked) {
+		return;
+	}
 	var type = g_items[g_selecting_index][0];
 	var pos = get_cursor_position(bottom_screen, e);
 	var x = pos[0];
@@ -1782,7 +1831,7 @@ document.getElementById("draw_ctrpf").checked = true;
 output_code.value = default_output_code;
 
 // Cookieの状態を復元
-if (get_all_cookies()["save"] != undefined) {
+if (get_all_cookies()["save"] != undefined) { // セーブデータが存在していれば
 	restore();
 }
 
