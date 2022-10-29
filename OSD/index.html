@@ -12,7 +12,7 @@
 		<meta name="author" content="Hidegon" />
 		<meta name="format-detection" content="telephone=no" />
 
-		<!-- favicon -->
+		<!-- Favicon -->
 		<meta name="msapplication-square70x70logo" content="./favicons/site-tile-70x70.png">
 		<meta name="msapplication-square150x150logo" content="./favicons/site-tile-150x150.png">
 		<meta name="msapplication-wide310x150logo" content="./favicons/site-tile-310x150.png">
@@ -79,7 +79,7 @@
 	<body>
 		<!-- Start of canvas area -->
 		<div id="center">
-			<span id="title">OSD Designer</span><br><br>
+			<span id="title">OSD&nbsp;Designer</span><br><br>
 			<canvas id="top_screen" title="400x240" aria-label="400x240"></canvas>
 			<br>
 			<canvas id="bottom_screen" title="320x240" aria-label="320x240"></canvas>
@@ -88,13 +88,13 @@
 
 
 		<!-- Start of copyright -->
-		<small id="small">&copy; 2022 Hidegon&nbsp;&nbsp;<a href="https://github.com/HidegonSan/HidegonSan.github.io/tree/master/OSD/" rel="noopener noreferrer" target="_blank" id="github_link">GitHub</a></small>
+		<small id="small">&copy;&nbsp;2022&nbsp;Hidegon&nbsp;&nbsp;<a href="https://github.com/HidegonSan/HidegonSan.github.io/tree/master/OSD/" rel="noopener noreferrer" target="_blank" id="github_link">GitHub</a></small>
 		<!-- End of copyright -->
 
 
 		<!-- Start of output -->
 		<div id="output">
-			<span>&nbsp;Generated code</span>
+			<span>&nbsp;Generated&nbsp;code</span>
 			<button id="copy_button">Copy</button>
 			<button id="save_button">Save</button>
 			<textarea id="output_code" readonly wrap="off"></textarea>
@@ -106,36 +106,36 @@
 		<!-- Start of settings -->
 		<div id="settings_title">&nbsp;Settings</div>
 		<div id="settings">
-			<label for="draw_ctrpf">CTRPF background: </label>
+			<label for="draw_ctrpf">CTRPF&nbsp;background:</label>
 			<input name="draw_ctrpf" id="draw_ctrpf" type="checkbox" checked class="update">
 			<br>
 
-			<label for="background_image_top">Top image:</label>
+			<label for="background_image_top">Top&nbsp;image:</label>
 			<input name="background_image_top_impl" id="background_image_top_impl" type="file" accept="image/*" class="update">
 			<button name="background_image_top" id="background_image_top">Browse</button>
 			<br>
 
-			<label for="background_image_bottom">Bottom image:</label>
+			<label for="background_image_bottom">Bottom&nbsp;image:</label>
 			<input name="background_image_bottom_impl" id="background_image_bottom_impl" type="file" accept="image/*"  class="update">
 			<button name="background_image_bottom_impl" id="background_image_bottom">Browse</button>
 			<br>
 
 			<span>
-				<button class="settings_bottom_buttons update" id="clear_background">Clear Background</button>
-				<button class="settings_bottom_buttons update" id="reset" >Reset</button>
+				<button class="settings_bottom_buttons update" id="clear_background">Clear&nbsp;Background</button>
 				<button class="settings_bottom_buttons update" id="export">Export</button>
 				<input name="import_impl" id="import_impl" type="file" accept="application/json" class="update hide">
 				<button class="settings_bottom_buttons update" id="import">Import</button>
+				<button class="settings_bottom_buttons update" id="reset" >Reset</button>
 			</span>
 		</div>
 		<!-- End of settings -->
 
 
 		<!-- Start of item editor -->
-		<div id="item_editor_title">&nbsp;Item Editor<span>Editing: ---</span><span><label for="click_move">Click move:</label><input type="checkbox" name="click_move" id="click_move"></span></div>
+		<div id="item_editor_title">&nbsp;Item&nbsp;Editor<span>Editing:&nbsp;---</span><span><label for="click_move">Click&nbsp;move:&nbsp;</label><input type="checkbox" name="click_move" id="click_move"></span></div>
 		<div id="item_editor">
 			<span class="item_editor_block" id="item_types_block">
-				<label for="types">Type: </label>
+				<label for="types">Type:</label>
 				<select name="types" id="item_types">
 					<option value="pixel">Pixel</option>
 					<option value="rect">Rect</option>
@@ -143,97 +143,96 @@
 					<option value="draw_sysfont">DrawSysfont</option>
 					<option value="line">Line</option>
 					<option value="cycle">Cycle</option>
-					<!-- <option value="image">Image</option> -->
 				</select>
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_screen_block">
-				<label for="text">Top Screen: </label>
+				<label for="text">Top&nbsp;Screen:</label>
 				<input name="text" id="item_screen" type="checkbox">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_text_block">
-				<label for="text">Text: </label>
+				<label for="text">Text:</label>
 				<input name="text" id="item_text" type="text">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_x_block">
-				<label for="x">X: </label>
+				<label for="x">X:</label>
 				<input name="x" id="item_x" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_y_block">
-				<label for="y">Y: </label>
+				<label for="y">Y:</label>
 				<input name="y" id="item_y" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_x2_block">
-				<label for="x2">To X: </label>
+				<label for="x2">To&nbsp;X:</label>
 				<input name="x2" id="item_x2" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_y2_block">
-				<label for="y2">To Y: </label>
+				<label for="y2">To&nbsp;Y:</label>
 				<input name="y2" id="item_y2" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_width_block">
-				<label for="width">Width: </label>
+				<label for="width">Width:</label>
 				<input name="width" id="item_width" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_height_block">
-				<label for="height">Height: </label>
+				<label for="height">Height:</label>
 				<input name="height" id="item_height" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_border_width_block">
-				<label for="border_width">Border Width: </label>
+				<label for="border_width">Border&nbsp;Width:</label>
 				<input name="border_width" id="item_border_width" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_padding_block">
-				<label for="padding">Padding: </label>
+				<label for="padding">Padding:</label>
 				<input name="padding" id="item_padding" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_radius_start_block">
-				<label for="radius_start">Radius Start: </label>
+				<label for="radius_start">Radius&nbsp;Start:</label>
 				<input name="radius_start" id="item_radius_start" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_radius_end_block">
-				<label for="radius_end">Radius End: </label>
+				<label for="radius_end">Radius&nbsp;End:</label>
 				<input name="radius_end" id="item_radius_end" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_arc_start_block">
-				<label for="arc_start">Arc Start: </label>
+				<label for="arc_start">Arc&nbsp;Start:</label>
 				<input name="arc_start" id="item_arc_start" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_arc_end_block">
-				<label for="arc_end">Arc End: </label>
+				<label for="arc_end">Arc&nbsp;End:</label>
 				<input name="arc_send" id="item_arc_end" type="number">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_color1_block">
-				<label for="colors">Color: </label>
+				<label for="colors">Color:</label>
 				<select name="color_list" class="color_list update" id="item_color1">
 					<option value="Black">Black</option>
 					<option value="White">White</option>
@@ -269,7 +268,7 @@
 			</span>
 
 			<span class="item_editor_block" id="item_color2_block">
-				<label for="colors2">Background: </label>
+				<label for="colors2">Background:</label>
 				<select name="color2_list" class="color_list update" id="item_color2">
 					<option value="Black">Black</option>
 					<option value="White">White</option>
@@ -306,7 +305,7 @@
 			</span>
 
 			<span class="item_editor_block" id="item_color3_block">
-				<label for="colors3">Border: </label>
+				<label for="colors3">Border:</label>
 				<select name="color3_list" class="color_list update" id="item_color3">
 					<option value="Black">Black</option>
 					<option value="White">White</option>
@@ -342,13 +341,13 @@
 			</span>
 
 			<span class="item_editor_block" id="item_filled_block">
-				<label for="filled">Filled: </label>
+				<label for="filled">Filled:</label>
 				<input name="filled" type="checkbox" id="item_filled">
 				<br>
 			</span>
 
 			<span class="item_editor_block" id="item_comment_block">
-				<label for="comment">Comment: </label>
+				<label for="comment">Comment:</label>
 				<input name="comment" type="text" id="item_comment">
 			</span>
 			<br>
@@ -359,11 +358,11 @@
 		<!-- Start of items -->
 		<div id="items_title">&nbsp;Items<span>(0)</span></div>
 		<div id="items">
-		<!-- item -->
+		<!-- Item -->
 		
-		<!-- item end -->
+		<!-- Item end -->
 		<hr>
-		<button id="item_add" class="update">Add Item</button>
+		<button id="item_add" class="update">Add&nbsp;Item</button>
 		</div>
 		<!-- End of items -->
 		<!-- End of right menu -->
