@@ -116,8 +116,8 @@ function c_draw_sysfont(elm, str, pos_x, pos_y, foreground="white") {
 }
 
 
-// void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border)
-function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color) {
+// void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign)
+function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, font_align) {
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "10px Noto Mono";
@@ -145,11 +145,51 @@ function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, 
 		);
 
 		// 文字 描画
+		// Align: 0=top_left, 1=top, 2=top_right, 3=middle_right, 4=bottom_right, 5=bottom, 6=bottom_left, 7=middle_left, 8=center (左上から時計回り)
+		var font_x = 0;
+		var font_y = 0;
+		if (font_align == 0) { // top_left
+			font_x = pos_x + border_width;
+			font_y = pos_y + border_width;
+		}
+		else if (font_align == 1) { // top
+			font_x = pos_x + border_width + padding;
+			font_y = pos_y + border_width;
+		}
+		else if (font_align == 2) { // top_right
+			font_x = pos_x + border_width + (padding*2);
+			font_y = pos_y + border_width;
+		}
+		else if (font_align == 3) { // middle_right
+			font_x = pos_x + border_width + (padding*2);
+			font_y = pos_y + border_width + padding;
+		}
+		else if (font_align == 4) { // bottom_right
+			font_x = pos_x + border_width + (padding*2);
+			font_y = pos_y + border_width + padding*2;
+		}
+		else if (font_align == 5) { // bottom
+			font_x = pos_x + border_width + padding;
+			font_y = pos_y + border_width + padding*2;
+		}
+		else if (font_align == 6) { // bottom_left
+			font_x = pos_x + border_width;
+			font_y = pos_y + border_width + padding*2;
+		}
+		else if (font_align == 7) { // middle_left
+			font_x = pos_x + border_width;
+			font_y = pos_y + border_width + padding;
+		}
+		else if (font_align == 8) { // center
+			font_x = pos_x + border_width + padding;
+			font_y = pos_y + border_width + padding;
+		}
+
 		c_draw(
 			elm,
 			str,
-			pos_x + border_width + padding,
-			pos_y + border_width + padding,
+			font_x,
+			font_y,
 			foreground,
 			background
 		);
@@ -157,8 +197,8 @@ function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, 
 }
 
 
-// DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border)
-function c_draw_sysfont_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, fillBackground) {
+// DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign)
+function c_draw_sysfont_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, fillBackground, font_align) {
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "14px Noto";
@@ -188,11 +228,52 @@ function c_draw_sysfont_plus(elm, str, pos_x, pos_y, border_width, padding, fore
 		}
 
 		// 文字 描画
+		// Align: 0=top_left, 1=top, 2=top_right, 3=middle_right, 4=bottom_right, 5=bottom, 6=bottom_left, 7=middle_left, 8=center (左上から時計回り)
+		var font_x = 0;
+		var font_y = 0;
+		if (font_align == 0) { // top_left
+			font_x = pos_x + border_width;
+			font_y = pos_y + border_width;
+		}
+		else if (font_align == 1) { // top
+			font_x = pos_x + border_width + padding;
+			font_y = pos_y + border_width;
+		}
+		else if (font_align == 2) { // top_right
+			font_x = pos_x + border_width + (padding*2);
+			font_y = pos_y + border_width;
+		}
+		else if (font_align == 3) { // middle_right
+			font_x = pos_x + border_width + (padding*2);
+			font_y = pos_y + border_width + padding;
+		}
+		else if (font_align == 4) { // bottom_right
+			font_x = pos_x + border_width + (padding*2);
+			font_y = pos_y + border_width + padding*2;
+		}
+		else if (font_align == 5) { // bottom
+			font_x = pos_x + border_width + padding;
+			font_y = pos_y + border_width + padding*2;
+		}
+		else if (font_align == 6) { // bottom_left
+			font_x = pos_x + border_width;
+			font_y = pos_y + border_width + padding*2;
+		}
+		else if (font_align == 7) { // middle_left
+			font_x = pos_x + border_width;
+			font_y = pos_y + border_width + padding;
+		}
+		else if (font_align == 8) { // center
+			font_x = pos_x + border_width + padding;
+			font_y = pos_y + border_width + padding;
+		}
+
+		// 文字 描画
 		c_draw_sysfont(
 			elm,
 			str,
-			pos_x + border_width + padding,
-			pos_y + border_width + padding,
+			font_x,
+			font_y,
 			foreground
 		);
 	}
@@ -435,8 +516,8 @@ Types: Pixel, Rect, Draw, DrawSysfont, Line, Cycle, Arc, Image
 [Type: (types), Properties: [(Show/Hide), (Top/Bottom), (Comment), ...], ...]
 
 Pixel                : x, y, color
-Rect                 : x, y, width, height, color, filled
-(Draw | DrawSysfont) : string, x, y, borderWidth, padding, foregroundColor, backgroundColor, borderColor, fillBackground
+Rect                 : x, y, width, height, color, filled, fontAlign
+(Draw | DrawSysfont) : string, x, y, borderWidth, padding, foregroundColor, backgroundColor, borderColor, fillBackground, fontAlign
 Line                 : x, y, x2, y2, color
 Cycle                : x, y, radiusStart, radiusEnd, start, end, color
 */
@@ -637,7 +718,7 @@ function output_generated_code() {
 		}
 
 		else if (type == 2) { // Draw
-			// str, x, y, border_width, padding, foreground, background, border_color
+			// str, x, y, border_width, padding, foreground, background, border_color, fontAlign
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -646,12 +727,13 @@ function output_generated_code() {
 			var foreground = to_ctrpf_color(properties[8]);
 			var background = to_ctrpf_color(properties[9]);
 			var border_color = to_ctrpf_color(properties[10]);
-			var code = comment_out + `DrawPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color});${comment}`;
+			var font_align = properties[11];
+			var code = comment_out + `DrawPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${font_align});${comment}`;
 			g_generated_codes.push(code);
 		}
 
 		else if (type == 3) { // DrawSysfont
-			// str, x, y, border_width, padding, foreground, background, border_color, fill_background
+			// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -661,7 +743,8 @@ function output_generated_code() {
 			var background = to_ctrpf_color(properties[9]);
 			var border_color = to_ctrpf_color(properties[10]);
 			var fill_background = properties[11];
-			var code = comment_out + `DrawSysfontPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${fill_background});${comment}`;
+			var font_align = properties[12];
+			var code = comment_out + `DrawSysfontPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${fill_background}, ${font_align});${comment}`;
 			g_generated_codes.push(code);
 		}
 
@@ -887,7 +970,7 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 2) { // Draw
-		// str, x, y, border_width, padding, foreground, background, border_color
+		// str, x, y, border_width, padding, foreground, background, border_color, fontAlign
 		var str = properties[3];
 		var x = properties[4];
 		var y = properties[5];
@@ -896,13 +979,16 @@ function set_item_editor(index) {
 		var foreground = to_css_color(properties[8]);
 		var background = to_css_color(properties[9]);
 		var border_color = to_css_color(properties[10]);
-		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block"]);
+		var font_align = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"][properties[11]];
+		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block", "item_align_block"]);
 		set_value("item_types", "draw");
 		set_value("item_text", str);
 		set_value("item_x", x.toString());
 		set_value("item_y", y.toString());
 		set_value("item_border_width", border_width.toString());
 		set_value("item_padding", padding.toString());
+		set_value("item_aligns", font_align);
+
 		document.querySelector("#item_color1_block > label").innerText = "Foreground: ";
 
 		// foreground
@@ -937,7 +1023,7 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 3) { // DrawSysfont
-		// str, x, y, border_width, padding, foreground, background, border_color, fill_background
+		// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign
 		var str = properties[3];
 		var x = properties[4];
 		var y = properties[5];
@@ -947,7 +1033,8 @@ function set_item_editor(index) {
 		var background = to_css_color(properties[9]);
 		var border_color = to_css_color(properties[10]);
 		var fill_background = properties[11];
-		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block", "item_color2_checkbox"]);
+		var font_align = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"][properties[12]];
+		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block", "item_color2_checkbox", "item_align_block"]);
 		set_value("item_types", "draw_sysfont");
 		set_value("item_text", str);
 		set_value("item_x", x.toString());
@@ -956,6 +1043,7 @@ function set_item_editor(index) {
 		set_value("item_border_width", border_width.toString());
 		set_value("item_padding", padding.toString());
 		document.getElementById("item_color2_checkbox").checked = fill_background;
+		set_value("item_aligns", font_align);
 
 		// foreground
 		if (foreground.startsWith("#")) {
@@ -1086,7 +1174,7 @@ function draw_items() {
 		}
 
 		else if (type == 2) { // Draw
-			// str, x, y, border_width, padding, foreground, background, border_color
+			// str, x, y, border_width, padding, foreground, background, border_color, fontAlign
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -1095,11 +1183,12 @@ function draw_items() {
 			var foreground = to_css_color(properties[8]);
 			var background = to_css_color(properties[9]);
 			var border_color = to_css_color(properties[10]);
-			c_draw_plus(scr, str, x, y, border_width, padding, foreground, background, border_color);
+			var font_align = properties[11];
+			c_draw_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, font_align);
 		}
 
 		else if (type == 3) { // DrawSysfont
-			// str, x, y, border_width, padding, foreground, background, border_color, fill_background
+			// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -1109,7 +1198,8 @@ function draw_items() {
 			var background = to_css_color(properties[9]);
 			var border_color = to_css_color(properties[10]);
 			var fill_background = properties[11];
-			c_draw_sysfont_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, fill_background);
+			var font_align = properties[12];
+			c_draw_sysfont_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, fill_background, font_align);
 		}
 
 		else if (type == 4) { // Line
@@ -1247,7 +1337,7 @@ void DrawLine(const Screen &scr, int srcX, int srcY, int dstX, int dstY, const C
 }
 
 
-void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border) {
+void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign) {
 	int bgWidth = OSD::GetTextWidth(false, str);
 	int height = 10 + padding*2;
 
@@ -1264,17 +1354,56 @@ void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32
 		background
 	);
 
+	u32 strX = 0;
+	u32 strY = 0;
+	if (fontAlign == 0) {
+		strX = posX + borderWidth;
+		strY = posY + borderWidth;
+	}
+	else if (fontAlign == 1) {
+		strX = posX + borderWidth + padding;
+		strY = posY + borderWidth;
+	}
+	else if (fontAlign == 2) {
+		strX = posX + borderWidth + (padding*2);
+		strY = posY + borderWidth;
+	}
+	else if (fontAlign == 3) {
+		strX = posX + borderWidth + (padding*2);
+		strY = posY + borderWidth + padding;
+	}
+	else if (fontAlign == 4) {
+		strX = posX + borderWidth + (padding*2);
+		strY = posY + borderWidth + padding*2;
+	}
+	else if (fontAlign == 5) {
+		strX = posX + borderWidth + padding;
+		strY = posY + borderWidth + padding*2;
+	}
+	else if (fontAlign == 6) {
+		strX = posX + borderWidth;
+		strY = posY + borderWidth + padding*2;
+	}
+	else if (fontAlign == 7) {
+		strX = posX + borderWidth;
+		strY = posY + borderWidth + padding;
+	}
+	else if (fontAlign == 8) {
+		strX = posX + borderWidth + padding;
+		strY = posY + borderWidth + padding;
+	}
+
 	scr.Draw(
 		str,
-		posX + borderWidth + padding,
-		posY + borderWidth + padding,
+		strX,
+		strY,
 		foreground,
 		background
 	);
 }
 
 
-void DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, bool fillBackground) {
+void DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, bool fillBackground, int fontAlign) {
 	int bgWidth = OSD::GetTextWidth(true, str);
 	int height = 16 + padding*2;
 
@@ -1291,6 +1420,45 @@ void DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 po
 			16 + padding*2,
 			background
 		);
+	}
+
+	u32 strX = 0;
+	u32 strY = 0;
+	if (fontAlign == 0) {
+		strX = posX + borderWidth;
+		strY = posY + borderWidth;
+	}
+	else if (fontAlign == 1) {
+		strX = posX + borderWidth + padding;
+		strY = posY + borderWidth;
+	}
+	else if (fontAlign == 2) {
+		strX = posX + borderWidth + (padding*2);
+		strY = posY + borderWidth;
+	}
+	else if (fontAlign == 3) {
+		strX = posX + borderWidth + (padding*2);
+		strY = posY + borderWidth + padding;
+	}
+	else if (fontAlign == 4) {
+		strX = posX + borderWidth + (padding*2);
+		strY = posY + borderWidth + padding*2;
+	}
+	else if (fontAlign == 5) {
+		strX = posX + borderWidth + padding;
+		strY = posY + borderWidth + padding*2;
+	}
+	else if (fontAlign == 6) {
+		strX = posX + borderWidth;
+		strY = posY + borderWidth + padding*2;
+	}
+	else if (fontAlign == 7) {
+		strX = posX + borderWidth;
+		strY = posY + borderWidth + padding;
+	}
+	else if (fontAlign == 8) {
+		strX = posX + borderWidth + padding;
+		strY = posY + borderWidth + padding;
 	}
 
 	scr.DrawSysfont(
@@ -1445,6 +1613,7 @@ var item_colorpicker3_inp = document.getElementById("item_colorpicker3");
 var item_filled_inp = document.getElementById("item_filled");
 var item_comment_inp = document.getElementById("item_comment");
 var item_fill_background_imp = document.getElementById("item_color2_checkbox");
+var item_align_imp = document.getElementById("item_align_block");
 
 // Types
 item_types_inp.addEventListener("change", function() {
@@ -1489,11 +1658,17 @@ item_types_inp.addEventListener("change", function() {
 	else if (type == "draw" || type == "draw_sysfont") {
 		var is_draw = (type == "draw");
 		g_items[g_selecting_index][0] = is_draw ? 2 : 3;
-		if (old_type == 2 || old_type == 3) {
-			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, is_draw ? 11 : 12).concat(is_draw ? [] : [true]); // fill_background
+		if (old_type == 2) { // 古いアイテムが draw
+			var font_align = g_items[g_selecting_index][1][11];
+			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, 11).concat(is_draw ? [] : [true]).concat([font_align]); // fill_background & font_align
+		}
+		else if (old_type == 3) { // 古いアイテムが draw_sysfont
+			var fill_background = g_items[g_selecting_index][1][11];
+			var font_align = g_items[g_selecting_index][1][12];
+			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, is_draw ? 11 : 12).concat(is_draw ? [] : [fill_background]).concat([font_align]); // fill_background & font_align
 		}
 		else {
-			g_items[g_selecting_index][1] = [show, is_top, comment, "", x, y, 0, 0, "white", "black", "red"].concat(is_draw ? [] : [true]); // fill_background
+			g_items[g_selecting_index][1] = [show, is_top, comment, "", x, y, 0, 0, "white", "black", "red"].concat(is_draw ? [] : [true]).concat([8]); // fill_background & font_align
 		}
 	}
 	else if (type == "line") {
@@ -1767,6 +1942,14 @@ item_fill_background_imp.addEventListener("change", function() {
 	g_items[g_selecting_index][1][11] = document.getElementById("item_color2_checkbox").checked;
 	update();
 });
+
+// Font Align
+item_align_imp.addEventListener("change", function() {
+	var type = g_items[g_selecting_index][0];
+	var font_align = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"].indexOf(get_value("item_aligns"));
+	g_items[g_selecting_index][1][type == 2 ? 11 : 12] = font_align;
+	update();
+})
 // アイテムエディタ イベント 終了
 
 // タッチ移動
