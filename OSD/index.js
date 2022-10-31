@@ -304,7 +304,7 @@ function c_draw_line(elm, src_x, src_y, dst_x, dst_y, color) {
 
 
 // void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, Color &color)
-c_draw_circle = draw_circle;
+var c_draw_circle = draw_circle;
 // キャンバス 実機寄り関数類 終了 //
 
 
