@@ -690,7 +690,8 @@ function output_generated_code() {
 		}
 	}
 	// 画面左のテキストエリアに代入
-	output_code.value = default_output_code.replace("/* {CODE} */", "\n  " + g_generated_codes.join("\n  ").replace(/\s\/\/\s\n/g, "\n").replace(/\s\/\/\s$/g, ""));
+	var g_generated_codes_reversed = [...g_generated_codes].reverse(); // 配列を反対にすることでアイテムリストの順番と実際の描画が直感的になる
+	output_code.value = default_output_code.replace("/* {CODE} */", "\n  " + g_generated_codes_reversed.join("\n  ").replace(/\s\/\/\s\n/g, "\n").replace(/\s\/\/\s$/g, ""));
 }
 
 
@@ -1136,6 +1137,24 @@ function draw_items() {
 }
 
 
+// リセット
+function reset() {
+	g_items = [];
+	g_selecting_index = -1;
+	delete_all_cookies();
+	set_backgroundcolor(top_screen, "white");
+	set_backgroundcolor(bottom_screen, "white");
+	g_top_screen_background_url = "";
+	g_bottom_screen_background_url = "";
+}
+
+
+// エクスポート
+function export_() {
+	download_text(JSON.stringify([g_selecting_index, document.getElementById("draw_ctrpf").checked].concat(g_items)), "osd_designer_" + get_date() + ".json");
+}
+
+
 // 現在の状態をCookieに保存
 function save() {
 	set_cookie("save", JSON.stringify([g_selecting_index, document.getElementById("draw_ctrpf").checked, g_items]));
@@ -1144,15 +1163,25 @@ function save() {
 
 // Cookieに保存した状態を復元
 function restore() {
-	var save_data = JSON.parse(get_all_cookies()["save"]);
-	g_selecting_index = parseInt(save_data[0]); // 選択中インデックス
-	document.getElementById("draw_ctrpf").checked = save_data[1]; // CTRPF 背景描画
+	try {
+		var save_data = JSON.parse(get_all_cookies()["save"]);
+		g_selecting_index = parseInt(save_data[0]); // 選択中インデックス
+		document.getElementById("draw_ctrpf").checked = save_data[1]; // CTRPF 背景描画
 
-	if (save_data[2]) { // アイテムリストが存在していれば
-		g_items = save_data[2];
+		if (save_data[2]) { // アイテムリストが存在していれば
+			g_items = save_data[2];
+		}
+
+		update();
 	}
-
-	update();
+	catch {
+		if(confirm("Broken or old save data.\nDo you want to export cookie?")) {
+			download_text(document.cookie, "osd_designer_cookie_" + get_date() + ".txt");
+		}
+		if (confirm("Are you sure want to reset?")) {
+			reset();
+		}
+	}
 }
 
 
@@ -1353,20 +1382,14 @@ clear_background_button.addEventListener("click", function() {
 var reset_button = document.getElementById("reset");
 reset_button.addEventListener("click", function() {
 	if (confirm("Are you sure want to reset?")) {
-		g_items = [];
-		g_selecting_index = -1;
-		delete_all_cookies();
-		set_backgroundcolor(top_screen, "white");
-		set_backgroundcolor(bottom_screen, "white");
-		g_top_screen_background_url = "";
-		g_bottom_screen_background_url = "";
+		reset();
 	}
 })
 
 // セーブデータ ダウンロード
 var export_button = document.getElementById("export");
 export_button.addEventListener("click", function() {
-	download_text(JSON.stringify([g_selecting_index, document.getElementById("draw_ctrpf").checked].concat(g_items)), "osd_designer_" + get_date() + ".json");
+	export_();
 });
 
 // セーブデータ ロード
