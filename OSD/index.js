@@ -496,8 +496,8 @@ function to_css_color(color) {
 
 
 // アイテム 追加
-function add_item(kind, properties) {
-	g_items.push([kind, properties]);
+function add_item(index, kind, properties) {
+	g_items.splice(index, 0, [kind, properties]);
 }
 
 
@@ -791,7 +791,7 @@ function update_items() {
 	// 新規アイテム追加
 	var add_item_button = document.getElementById("item_add");
 	add_item_button.addEventListener("click", function() {
-		add_item(-1, [false]);
+		add_item(g_selecting_index, -1, [false]);
 		update();
 	});
 
