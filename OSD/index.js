@@ -69,7 +69,7 @@ function draw_string(elm, string, x, y, size=10, color="white", font="px Noto") 
 
 
 // 円 描画
-function draw_cycle(elm, x, y, radius_start, radius_end, start=0, end=360, color="black") {
+function draw_circle(elm, x, y, radius_start, radius_end, start=0, end=360, color="black") {
 	// C++側では高速化のために以下の処理を行うが、JSでは汚くなるので使用しない
 	// var rect_length = parseInt((radius_end*2) / 1.41421356237);
 	//var mini_radius = parseInt(rect_length / 2);
@@ -303,8 +303,8 @@ function c_draw_line(elm, src_x, src_y, dst_x, dst_y, color) {
 }
 
 
-// void DrawCycle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, Color &color)
-c_draw_cycle = draw_cycle;
+// void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, Color &color)
+c_draw_circle = draw_circle;
 // キャンバス 実機寄り関数類 終了 //
 
 
@@ -512,14 +512,14 @@ set_backgroundcolor(bottom_screen, "white");
 
 // 処理類 //
 /*
-Types: Pixel, Rect, Draw, DrawSysfont, Line, Cycle, Arc, Image
+Types: Pixel, Rect, Draw, DrawSysfont, Line, Circle, Arc, Image
 [Type: (types), Properties: [(Show/Hide), (Top/Bottom), (Comment), ...], ...]
 
 Pixel                : x, y, color
 Rect                 : x, y, width, height, color, filled, fontAlign
 (Draw | DrawSysfont) : string, x, y, borderWidth, padding, foregroundColor, backgroundColor, borderColor, fillBackground, fontAlign
 Line                 : x, y, x2, y2, color
-Cycle                : x, y, radiusStart, radiusEnd, start, end, color
+Circle                : x, y, radiusStart, radiusEnd, start, end, color
 */
 
 // 変数類 //
@@ -679,7 +679,7 @@ function draw_ctrpf_background() {
 
 // コード 生成
 function output_generated_code() {
-	// Types: Pixel, Rect, Draw, DrawSysfont, Line, Cycle
+	// Types: Pixel, Rect, Draw, DrawSysfont, Line, Circle
 	g_generated_codes = []; // 一旦リセット
 
 	for (var i=0; i<g_items.length; i++) {
@@ -759,7 +759,7 @@ function output_generated_code() {
 			g_generated_codes.push(code);
 		}
 
-		else if (type == 5) { // Cycle
+		else if (type == 5) { // Circle
 			// x, y, radius_start, radius_end, start, end, color
 			var x = properties[3];
 			var y = properties[4];
@@ -768,7 +768,7 @@ function output_generated_code() {
 			var start = properties[7];
 			var end = properties[8];
 			var color = to_ctrpf_color(properties[9]);
-			var code = comment_out + `DrawCycle(${scr}, ${x}, ${y}, ${radius_start}, ${radius_end}, ${start}, ${end}, ${color});${comment}`;
+			var code = comment_out + `DrawCircle(${scr}, ${x}, ${y}, ${radius_start}, ${radius_end}, ${start}, ${end}, ${color});${comment}`;
 			g_generated_codes.push(code);
 		}
 	}
@@ -1102,7 +1102,7 @@ function set_item_editor(index) {
 		}
 	}
 
-	else if (type == 5) { // Cycle
+	else if (type == 5) { // Circle
 		// x, y, radius_start, radius_end, start, end, color
 		var x = properties[3];
 		var y = properties[4];
@@ -1112,7 +1112,7 @@ function set_item_editor(index) {
 		var end = properties[8];
 		var color = to_css_color(properties[9]);
 		show_elements(["item_types_block", "item_x_block", "item_y_block", "item_radius_start_block", "item_radius_end_block", "item_arc_start_block", "item_arc_end_block", "item_color1_block", "item_comment_block", "item_screen_block"]);
-		set_value("item_types", "cycle");
+		set_value("item_types", "circle");
 		set_value("item_x", x.toString());
 		set_value("item_y", y.toString());
 		set_value("item_radius_start", radius_start.toString());
@@ -1212,7 +1212,7 @@ function draw_items() {
 			c_draw_line(scr, x, y, x2, y2, color);
 		}
 
-		else if (type == 5) { // Cycle
+		else if (type == 5) { // Circle
 			// x, y, radius_start, radius_end, start, end, color
 			var x = properties[3];
 			var y = properties[4];
@@ -1221,7 +1221,7 @@ function draw_items() {
 			var start = properties[7];
 			var end = properties[8];
 			var color = to_css_color(properties[9]);
-			c_draw_cycle(scr, x, y, radius_start, radius_end, start, end, color);
+			c_draw_circle(scr, x, y, radius_start, radius_end, start, end, color);
 		}
 	}
 }
@@ -1475,7 +1475,7 @@ float DegreeToRadian(float degree) {
 }
 
 
-void DrawCycle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, const Color &color) {
+void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, const Color &color) {
 	u32 rectLength = (radiusEnd*2) / 1.41421356237;
 	u32 miniRadius = rectLength / 2;
 
@@ -1675,7 +1675,7 @@ item_types_inp.addEventListener("change", function() {
 		g_items[g_selecting_index][0] = 4;
 		g_items[g_selecting_index][1] = [show, is_top, comment, 0, 0, 0, 0, color];
 	}
-	else if (type == "cycle") {
+	else if (type == "circle") {
 		g_items[g_selecting_index][0] = 5;
 		g_items[g_selecting_index][1] = [show, is_top, comment, x, y, 0, 0, 0, 360, color];
 	}
