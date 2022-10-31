@@ -1613,7 +1613,7 @@ var item_colorpicker3_inp = document.getElementById("item_colorpicker3");
 var item_filled_inp = document.getElementById("item_filled");
 var item_comment_inp = document.getElementById("item_comment");
 var item_fill_background_imp = document.getElementById("item_color2_checkbox");
-var item_align_imp = document.getElementById("item_align_block");
+var item_align_imp = document.getElementById("item_aligns");
 
 // Types
 item_types_inp.addEventListener("change", function() {
