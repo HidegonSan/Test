@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/hidegon
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://hidegonsan.github.io
+  * I am hidegon (https://keybase.io/hidegon) on keybase.
+  * I have a public key ASAbV2ei6_dk3FcVfiUPYtm1q5duytiCJ4O2_8XSjsMAaAo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01201b5767a2ebf764dc57157e250f62d9b5ab976ecad8822783b6ffc5d28ec300680a",
+      "host": "keybase.io",
+      "kid": "01201b5767a2ebf764dc57157e250f62d9b5ab976ecad8822783b6ffc5d28ec300680a",
+      "uid": "5aa86e9c67c805e80cf140667f38f119",
+      "username": "hidegon"
+    },
+    "merkle_root": {
+      "ctime": 1668786599,
+      "hash": "01d93978e171dc716bcb15aebc4e898d7aaca32636565dd7b0d5ca75bbc464c2e796fe4ba36d370b95c1f0cc61ede0b3be5f2386b81c8dc6e2fb79d03e14d252",
+      "hash_meta": "2ca96cb4db27ea94ee4e13fea01a1ffeba8a092c0ee9d7c40c5e54908b5db4f3",
+      "seqno": 23576316
+    },
+    "service": {
+      "entropy": "Bjevsduh6cw/yvfMxCb6MP6u",
+      "hostname": "hidegonsan.github.io",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "6.0.1"
+  },
+  "ctime": 1668786666,
+  "expire_in": 504576000,
+  "prev": "f6e1687a359ce0acb718d115346d4bbfe1b1e36f64a01c5e292fac957d27f488",
+  "seqno": 7,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgG1dnouv3ZNxXFX4lD2LZtauXbsrYgieDtv/F0o7DAGgKp3BheWxvYWTESpcCB8Qg9uFoejWc4Ky3GNEVNG1Lv+Gx429koBxeKS+slX0n9IjEICEg14x+4s8afQOEcl59oYQ6rLkP156it2LHOy02F9bgAgHCo3NpZ8RAiXnNsSZGn3VtFGSihxB60eHbV82J7/zLWQlgcCAScl+WjCXmPwGswmNU9GFXRPJsZ9RPmqTb9DQntRiad7qkBqhzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIGa3aMToXW5vN0LcOew5dortcX0s2JILlSIO+9mGtXX1o3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/hidegon
+
+==================================================================
