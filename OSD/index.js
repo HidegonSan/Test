@@ -69,7 +69,7 @@ function draw_string(elm, string, x, y, size=10, color="white", font="px Noto") 
 
 
 // 円 描画
-function draw_circle(elm, x, y, radius_start, radius_end, start=0, end=360, color="black") {
+function draw_circle(elm, pos_x, pos_y, radius_start, radius_end, start=0, end=360, color="black", origin = 8) {
 	// C++側では高速化のために以下の処理を行うが、JSでは汚くなるので使用しない
 	// var rect_length = parseInt((radius_end*2) / 1.41421356237);
 	//var mini_radius = parseInt(rect_length / 2);
@@ -83,11 +83,45 @@ function draw_circle(elm, x, y, radius_start, radius_end, start=0, end=360, colo
 	//	mini_radius = radius_start;
 	//}
 
+	// 基点
+	// Origin: 0=top_left, 1=top, 2=top_right, 3=middle_right, 4=bottom_right, 5=bottom, 6=bottom_left, 7=middle_left, 8=center (左上から時計回り)
+	if (origin == 0) { // top_left
+		pos_x = pos_x + radius_end;
+		pos_y = pos_y + radius_end;
+	}
+	else if (origin == 1) { // top
+		pos_y = pos_y + radius_end;
+	}
+	else if (origin == 2) { // top_right
+		pos_x = pos_x - radius_end;
+		pos_y = pos_y + radius_end;
+	}
+	else if (origin == 3) { // middle_right
+		pos_x = pos_x - radius_end;
+	}
+	else if (origin == 4) { // bottom_right
+		pos_x = pos_x - radius_end;
+		pos_y = pos_y - radius_end;
+	}
+	else if (origin == 5) { // bottom
+		pos_y = pos_y - radius_end;
+	}
+	else if (origin == 6) { // bottom_left
+		pos_x = pos_x + radius_end;
+		pos_y = pos_y - radius_end;
+	}
+	else if (origin == 7) { // middle_left
+		pos_x = pos_x + radius_end;
+	}
+	else if (origin == 8) { // center
+		// NOTHING
+	}
+
 	var mini_radius = radius_start;
 
 	for (var r = mini_radius; r < radius_end; r++) {
 		for (var angle = start; angle < end; angle++) {
-			draw_pixel(elm, x + Math.cos(degree_to_radian(angle))*r, y + Math.sin(degree_to_radian(angle))*r, color);
+			draw_pixel(elm, pos_x + Math.cos(degree_to_radian(angle))*r, pos_y + Math.sin(degree_to_radian(angle))*r, color);
 		}
 	}
 }
@@ -116,13 +150,47 @@ function c_draw_sysfont(elm, str, pos_x, pos_y, foreground="white") {
 }
 
 
-// void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign)
-function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, font_align) {
+// void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign, int origin)
+function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, font_align, origin = 0) {
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "10px Noto Mono";
 		var bg_width = ctx.measureText(str).width;
 		var height = 10 + padding*2;
+
+		// 基点
+		// Origin: 0=top_left, 1=top, 2=top_right, 3=middle_right, 4=bottom_right, 5=bottom, 6=bottom_left, 7=middle_left, 8=center (左上から時計回り)
+		if (origin == 0) { // top_left
+			// DO NOTHING
+		}
+		else if (origin == 1) { // top
+			pos_x = pos_x - ((border_width*2 + padding*2 + bg_width) / 2);
+		}
+		else if (origin == 2) { // top_right
+			pos_x = pos_x - (border_width*2 + padding*2 + bg_width);
+		}
+		else if (origin == 3) { // middle_right
+			pos_x = pos_x - (border_width*2 + padding*2 + bg_width);
+			pos_y = pos_y - ((border_width*2 + padding*2 + 10) / 2);
+		}
+		else if (origin == 4) { // bottom_right
+			pos_x = pos_x - (border_width*2 + padding*2 + bg_width);
+			pos_y = pos_y - (border_width*2 + padding*2 + 10);
+		}
+		else if (origin == 5) { // bottom
+			pos_x = pos_x - ((border_width*2 + padding*2 + bg_width) / 2);
+			pos_y = pos_y - (border_width*2 + padding*2 + 10);
+		}
+		else if (origin == 6) { // bottom_left
+			pos_y = pos_y - (border_width*2 + padding*2 + 10);
+		}
+		else if (origin == 7) { // middle_left
+			pos_y = pos_y - ((border_width*2 + padding*2 + 10) / 2);
+		}
+		else if (origin == 8) { // center
+			pos_x = pos_x - ((border_width*2 + padding*2 + bg_width) / 2);
+			pos_y = pos_y - ((border_width*2 + padding*2 + 10) / 2);
+		}
 
 		// 枠 描画
 		// Top
@@ -197,13 +265,47 @@ function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, 
 }
 
 
-// DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign)
-function c_draw_sysfont_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, fillBackground, font_align) {
+// DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign, int origin)
+function c_draw_sysfont_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, fillBackground, font_align, origin = 0) {
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "14px Noto";
 		var bg_width = ctx.measureText(str).width;
 		var height = 16 + padding*2;
+
+		// 基点
+		// Origin: 0=top_left, 1=top, 2=top_right, 3=middle_right, 4=bottom_right, 5=bottom, 6=bottom_left, 7=middle_left, 8=center (左上から時計回り)
+		if (origin == 0) { // top_left
+			// DO NOTHING
+		}
+		else if (origin == 1) { // top
+			pos_x = pos_x - ((border_width*2 + padding*2 + bg_width) / 2);
+		}
+		else if (origin == 2) { // top_right
+			pos_x = pos_x - (border_width*2 + padding*2 + bg_width);
+		}
+		else if (origin == 3) { // middle_right
+			pos_x = pos_x - (border_width*2 + padding*2 + bg_width);
+			pos_y = pos_y - ((border_width*2 + padding*2 + 16) / 2);
+		}
+		else if (origin == 4) { // bottom_right
+			pos_x = pos_x - (border_width*2 + padding*2 + bg_width);
+			pos_y = pos_y - (border_width*2 + padding*2 + 16);
+		}
+		else if (origin == 5) { // bottom
+			pos_x = pos_x - ((border_width*2 + padding*2 + bg_width) / 2);
+			pos_y = pos_y - (border_width*2 + padding*2 + 16);
+		}
+		else if (origin == 6) { // bottom_left
+			pos_y = pos_y - (border_width*2 + padding*2 + 16);
+		}
+		else if (origin == 7) { // middle_left
+			pos_y = pos_y - ((border_width*2 + padding*2 + 16) / 2);
+		}
+		else if (origin == 8) { // center
+			pos_x = pos_x - ((border_width*2 + padding*2 + bg_width) / 2);
+			pos_y = pos_y - ((border_width*2 + padding*2 + 16) / 2);
+		}
 
 		// 枠 描画
 		// Top
@@ -291,6 +393,46 @@ function c_draw_rect(elm, pos_x, pos_y, width, height, color, filled = true) {
 }
 
 
+// void DrawRectPlus(const Screen &scr, u32 posX, u32 posY, u32 width, u32 height, const Color &color, bool filled = true, int origin = 0)
+function c_draw_rect_plus(elm, pos_x, pos_y, width, height, color, filled = true, origin = 0) {
+	// 基点
+	// Origin: 0=top_left, 1=top, 2=top_right, 3=middle_right, 4=bottom_right, 5=bottom, 6=bottom_left, 7=middle_left, 8=center (左上から時計回り)
+	if (origin == 0) { // top_left
+		// DO NOTHING
+	}
+	else if (origin == 1) { // top
+		pos_x = pos_x - (width / 2);
+	}
+	else if (origin == 2) { // top_right
+		pos_x = pos_x - width;
+	}
+	else if (origin == 3) { // middle_right
+		pos_x = pos_x - width;
+		pos_y = pos_y - (height / 2);
+	}
+	else if (origin == 4) { // bottom_right
+		pos_x = pos_x - width;
+		pos_y = pos_y - height;
+	}
+	else if (origin == 5) { // bottom
+		pos_x = pos_x - (width / 2);
+		pos_y = pos_y - height;
+	}
+	else if (origin == 6) { // bottom_left
+		pos_y = pos_y - height;
+	}
+	else if (origin == 7) { // middle_left
+		pos_y = pos_y - (height / 2);
+	}
+	else if (origin == 8) { // center
+		pos_x = pos_x - (width / 2);
+		pos_y = pos_y - (height / 2);
+	}
+
+	c_draw_rect(elm, pos_x, pos_y, width, height, color, filled);
+}
+
+
 // void DrawPixel(u32 posX, u32 posY, const Color &color) const;
 function c_draw_pixel(elm, pos_x, pos_y, color) {
 	draw_pixel(elm, pos_x, pos_y, color);
@@ -303,8 +445,10 @@ function c_draw_line(elm, src_x, src_y, dst_x, dst_y, color) {
 }
 
 
-// void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, Color &color)
-var c_draw_circle = draw_circle;
+// void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, Color &color, int origin)
+function c_draw_circle(elm, x, y, radius_start, radius_end, start=0, end=360, color="black", origin = 8) {
+	draw_circle(elm, x, y, radius_start, radius_end, start, end, color, origin)
+}
 // キャンバス 実機寄り関数類 終了 //
 
 
@@ -516,10 +660,10 @@ Types: Pixel, Rect, Draw, DrawSysfont, Line, Circle, Arc, Image
 [Type: (types), Properties: [(Show/Hide), (Top/Bottom), (Comment), ...], ...]
 
 Pixel                : x, y, color
-Rect                 : x, y, width, height, color, filled, fontAlign
-(Draw | DrawSysfont) : string, x, y, borderWidth, padding, foregroundColor, backgroundColor, borderColor, fillBackground, fontAlign
+Rect                 : x, y, width, height, color, filled, fontAlign, origin
+(Draw | DrawSysfont) : string, x, y, borderWidth, padding, foregroundColor, backgroundColor, borderColor, fillBackground, fontAlign, origin
 Line                 : x, y, x2, y2, color
-Circle                : x, y, radiusStart, radiusEnd, start, end, color
+Circle                : x, y, radiusStart, radiusEnd, start, end, color, origin
 */
 
 // 変数類 //
@@ -706,19 +850,20 @@ function output_generated_code() {
 		}
 
 		else if (type == 1) { // Rect
-			// x, y, width, height, color, filled
+			// x, y, width, height, color, filled, origin
 			var x = properties[3];
 			var y = properties[4];
 			var width = properties[5];
 			var height = properties[6];
 			var color = to_ctrpf_color(properties[7]);
 			var filled = properties[8];
-			var code = comment_out + scr + `.DrawRect(${x}, ${y}, ${width}, ${height}, ${color}, ${filled});${comment}`;
+			var origin = properties[9];
+			var code = comment_out + scr + `.DrawRect(${x}, ${y}, ${width}, ${height}, ${color}, ${filled}, ${origin});${comment}`;
 			g_generated_codes.push(code);
 		}
 
 		else if (type == 2) { // Draw
-			// str, x, y, border_width, padding, foreground, background, border_color, fontAlign
+			// str, x, y, border_width, padding, foreground, background, border_color, fontAlign, origin
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -728,12 +873,13 @@ function output_generated_code() {
 			var background = to_ctrpf_color(properties[9]);
 			var border_color = to_ctrpf_color(properties[10]);
 			var font_align = properties[11];
-			var code = comment_out + `DrawPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${font_align});${comment}`;
+			var origin = properties[12];
+			var code = comment_out + `DrawPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${font_align}, ${origin});${comment}`;
 			g_generated_codes.push(code);
 		}
 
 		else if (type == 3) { // DrawSysfont
-			// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign
+			// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign, origin
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -744,7 +890,8 @@ function output_generated_code() {
 			var border_color = to_ctrpf_color(properties[10]);
 			var fill_background = properties[11];
 			var font_align = properties[12];
-			var code = comment_out + `DrawSysfontPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${fill_background}, ${font_align});${comment}`;
+			var origin = properties[13];
+			var code = comment_out + `DrawSysfontPlus(${scr}, "${str.replace(/"/g, "\\\"")}", ${x}, ${y}, ${border_width}, ${padding}, ${foreground}, ${background}, ${border_color}, ${fill_background}, ${font_align}, ${origin});${comment}`;
 			g_generated_codes.push(code);
 		}
 
@@ -760,7 +907,7 @@ function output_generated_code() {
 		}
 
 		else if (type == 5) { // Circle
-			// x, y, radius_start, radius_end, start, end, color
+			// x, y, radius_start, radius_end, start, end, color, origin
 			var x = properties[3];
 			var y = properties[4];
 			var radius_start = properties[5];
@@ -768,7 +915,8 @@ function output_generated_code() {
 			var start = properties[7];
 			var end = properties[8];
 			var color = to_ctrpf_color(properties[9]);
-			var code = comment_out + `DrawCircle(${scr}, ${x}, ${y}, ${radius_start}, ${radius_end}, ${start}, ${end}, ${color});${comment}`;
+			var origin = properties[10];
+			var code = comment_out + `DrawCircle(${scr}, ${x}, ${y}, ${radius_start}, ${radius_end}, ${start}, ${end}, ${color}, ${origin});${comment}`;
 			g_generated_codes.push(code);
 		}
 	}
@@ -944,20 +1092,22 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 1) { // Rect
-		// x, y, width, height, color, filled
+		// x, y, width, height, color, filled, origin
 		var x = properties[3];
 		var y = properties[4];
 		var width = properties[5];
 		var height = properties[6];
 		var color = to_css_color(properties[7]);
 		var filled = properties[8];
-		show_elements(["item_types_block", "item_width_block", "item_height_block", "item_x_block", "item_y_block", "item_color1_block", "item_filled_block", "item_comment_block", "item_screen_block"]);
+		var origin = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"][properties[9]];
+		show_elements(["item_types_block", "item_width_block", "item_height_block", "item_x_block", "item_y_block", "item_color1_block", "item_filled_block", "item_comment_block", "item_screen_block", "item_origin_block"]);
 		set_value("item_types", "rect");
 		set_value("item_x", x.toString());
 		set_value("item_y", y.toString());
 		set_value("item_width", width.toString());
 		set_value("item_height", height.toString());
 		document.getElementById("item_filled").checked = filled;
+		set_value("item_origins", origin);
 
 		if (color.startsWith("#")) {
 			set_value("item_color1", "");
@@ -970,7 +1120,7 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 2) { // Draw
-		// str, x, y, border_width, padding, foreground, background, border_color, fontAlign
+		// str, x, y, border_width, padding, foreground, background, border_color, fontAlign, origin
 		var str = properties[3];
 		var x = properties[4];
 		var y = properties[5];
@@ -980,7 +1130,8 @@ function set_item_editor(index) {
 		var background = to_css_color(properties[9]);
 		var border_color = to_css_color(properties[10]);
 		var font_align = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"][properties[11]];
-		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block", "item_align_block"]);
+		var origin = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"][properties[12]];
+		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block", "item_align_block", "item_origin_block"]);
 		set_value("item_types", "draw");
 		set_value("item_text", str);
 		set_value("item_x", x.toString());
@@ -988,7 +1139,7 @@ function set_item_editor(index) {
 		set_value("item_border_width", border_width.toString());
 		set_value("item_padding", padding.toString());
 		set_value("item_aligns", font_align);
-
+		set_value("item_origins", origin);
 		document.querySelector("#item_color1_block > label").innerText = "Foreground: ";
 
 		// foreground
@@ -1023,7 +1174,7 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 3) { // DrawSysfont
-		// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign
+		// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign, origin
 		var str = properties[3];
 		var x = properties[4];
 		var y = properties[5];
@@ -1034,7 +1185,8 @@ function set_item_editor(index) {
 		var border_color = to_css_color(properties[10]);
 		var fill_background = properties[11];
 		var font_align = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"][properties[12]];
-		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block", "item_color2_checkbox", "item_align_block"]);
+		var origin = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"][properties[13]];
+		show_elements(["item_types_block", "item_text_block", "item_x_block", "item_y_block", "item_border_width_block", "item_padding_block", "item_color1_block", "item_color2_block", "item_color3_block", "item_comment_block", "item_screen_block", "item_color2_checkbox", "item_align_block", "item_origin_block"]);
 		set_value("item_types", "draw_sysfont");
 		set_value("item_text", str);
 		set_value("item_x", x.toString());
@@ -1044,6 +1196,8 @@ function set_item_editor(index) {
 		set_value("item_padding", padding.toString());
 		document.getElementById("item_color2_checkbox").checked = fill_background;
 		set_value("item_aligns", font_align);
+		set_value("item_origins", origin);
+		document.querySelector("#item_color1_block > label").innerText = "Foreground: ";
 
 		// foreground
 		if (foreground.startsWith("#")) {
@@ -1103,7 +1257,7 @@ function set_item_editor(index) {
 	}
 
 	else if (type == 5) { // Circle
-		// x, y, radius_start, radius_end, start, end, color
+		// x, y, radius_start, radius_end, start, end, color, origin
 		var x = properties[3];
 		var y = properties[4];
 		var radius_start = properties[5];
@@ -1111,7 +1265,8 @@ function set_item_editor(index) {
 		var start = properties[7];
 		var end = properties[8];
 		var color = to_css_color(properties[9]);
-		show_elements(["item_types_block", "item_x_block", "item_y_block", "item_radius_start_block", "item_radius_end_block", "item_arc_start_block", "item_arc_end_block", "item_color1_block", "item_comment_block", "item_screen_block"]);
+		var origin = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"][properties[10]];
+		show_elements(["item_types_block", "item_x_block", "item_y_block", "item_radius_start_block", "item_radius_end_block", "item_arc_start_block", "item_arc_end_block", "item_color1_block", "item_comment_block", "item_screen_block", "item_origin_block"]);
 		set_value("item_types", "circle");
 		set_value("item_x", x.toString());
 		set_value("item_y", y.toString());
@@ -1119,6 +1274,7 @@ function set_item_editor(index) {
 		set_value("item_radius_end", radius_end.toString());
 		set_value("item_arc_start", start.toString());
 		set_value("item_arc_end", end.toString());
+		set_value("item_origins", origin);
 
 		if (color.startsWith("#")) {
 			set_value("item_color1", "");
@@ -1163,18 +1319,19 @@ function draw_items() {
 		}
 
 		else if (type == 1) { // Rect
-			// x, y, width, height, color, filled
+			// x, y, width, height, color, filled, origin
 			var x = properties[3];
 			var y = properties[4];
 			var width = properties[5];
 			var height = properties[6];
 			var color = to_css_color(properties[7]);
 			var filled = properties[8];
-			c_draw_rect(scr, x, y, width, height, color, filled);
+			var origin = properties[9];
+			c_draw_rect(scr, x, y, width, height, color, filled, origin);
 		}
 
 		else if (type == 2) { // Draw
-			// str, x, y, border_width, padding, foreground, background, border_color, fontAlign
+			// str, x, y, border_width, padding, foreground, background, border_color, fontAlign, origin
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -1184,11 +1341,12 @@ function draw_items() {
 			var background = to_css_color(properties[9]);
 			var border_color = to_css_color(properties[10]);
 			var font_align = properties[11];
-			c_draw_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, font_align);
+			var origin = properties[12];
+			c_draw_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, font_align, origin);
 		}
 
 		else if (type == 3) { // DrawSysfont
-			// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign
+			// str, x, y, border_width, padding, foreground, background, border_color, fill_background, fontAlign, origin
 			var str = properties[3];
 			var x = properties[4];
 			var y = properties[5];
@@ -1199,7 +1357,8 @@ function draw_items() {
 			var border_color = to_css_color(properties[10]);
 			var fill_background = properties[11];
 			var font_align = properties[12];
-			c_draw_sysfont_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, fill_background, font_align);
+			var origin = properties[13];
+			c_draw_sysfont_plus(scr, str, x, y, border_width, padding, foreground, background, border_color, fill_background, font_align, origin);
 		}
 
 		else if (type == 4) { // Line
@@ -1213,7 +1372,7 @@ function draw_items() {
 		}
 
 		else if (type == 5) { // Circle
-			// x, y, radius_start, radius_end, start, end, color
+			// x, y, radius_start, radius_end, start, end, color, origin
 			var x = properties[3];
 			var y = properties[4];
 			var radius_start = properties[5];
@@ -1221,7 +1380,8 @@ function draw_items() {
 			var start = properties[7];
 			var end = properties[8];
 			var color = to_css_color(properties[9]);
-			c_draw_circle(scr, x, y, radius_start, radius_end, start, end, color);
+			var origin = properties[10];
+			c_draw_circle(scr, x, y, radius_start, radius_end, start, end, color, origin);
 		}
 	}
 }
@@ -1306,6 +1466,10 @@ var copyright = `
 /*                                                   */
 /*****************************************************/
 
+
+#include <math.h>
+
+
 /* Utility functions for OSD */
 // Thanks: https://en.wikipedia.org/wiki/Digital_differential_analyzer_(graphics_algorithm)
 void DrawLine(const Screen &scr, int srcX, int srcY, int dstX, int dstY, const Color &color) {
@@ -1337,9 +1501,74 @@ void DrawLine(const Screen &scr, int srcX, int srcY, int dstX, int dstY, const C
 }
 
 
-void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign) {
+void DrawRectPlus(const Screen &scr, u32 posX, u32 posY, u32 width, u32 height, const Color &color, bool filled = true, int origin = 0) {
+	if (origin == 0) { }
+	else if (origin == 1) {
+		posX = posX - (width / 2);
+	}
+	else if (origin == 2) {
+		posX = posX - width;
+	}
+	else if (origin == 3) {
+		posX = posX - width;
+		posY = posY - (height / 2);
+	}
+	else if (origin == 4) {
+		posX = posX - width;
+		posY = posY - height;
+	}
+	else if (origin == 5) {
+		posX = posX - (width / 2);
+		posY = posY - height;
+	}
+	else if (origin == 6) {
+		posY = posY - height;
+	}
+	else if (origin == 7) {
+		posY = posY - (height / 2);
+	}
+	else if (origin == 8) {
+		posX = posX - (width / 2);
+		posY = posY - (height / 2);
+	}
+
+	scr.DrawRect(posX, posY, width, height, color, filled);
+}
+
+
+void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign, int origin) {
 	int bgWidth = OSD::GetTextWidth(false, str);
 	int height = 10 + padding*2;
+
+	if (origin == 0) { }
+	else if (origin == 1) {
+		posX = posX - ((borderWidth*2 + padding*2 + bgWidth) / 2);
+	}
+	else if (origin == 2) {
+		posX = posX - (borderWidth*2 + padding*2 + bgWidth);
+	}
+	else if (origin == 3) {
+		posX = posX - (borderWidth*2 + padding*2 + bgWidth);
+		posY = posY - ((borderWidth*2 + padding*2 + 10) / 2);
+	}
+	else if (origin == 4) {
+		posX = posX - (borderWidth*2 + padding*2 + bgWidth);
+		posY = posY - (borderWidth*2 + padding*2 + 10);
+	}
+	else if (origin == 5) {
+		posX = posX - ((borderWidth*2 + padding*2 + bgWidth) / 2);
+		posY = posY - (borderWidth*2 + padding*2 + 10);
+	}
+	else if (origin == 6) {
+		posY = posY - (borderWidth*2 + padding*2 + 10);
+	}
+	else if (origin == 7) {
+		posY = posY - ((borderWidth*2 + padding*2 + 10) / 2);
+	}
+	else if (origin == 8) {
+		posX = posX - ((borderWidth*2 + padding*2 + bgWidth) / 2);
+		posY = posY - ((borderWidth*2 + padding*2 + 10) / 2);
+	}
 
 	scr.DrawRect(posX, posY, bgWidth + (borderWidth*2) + (padding*2), borderWidth, border);
 	scr.DrawRect(posX + borderWidth + padding + bgWidth + padding, posY + borderWidth, borderWidth, height, border);
@@ -1403,9 +1632,39 @@ void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32
 }
 
 
-void DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, bool fillBackground, int fontAlign) {
+void DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, bool fillBackground, int fontAlign, int origin) {
 	int bgWidth = OSD::GetTextWidth(true, str);
 	int height = 16 + padding*2;
+
+	if (origin == 0) { }
+	else if (origin == 1) {
+		posX = posX - ((borderWidth*2 + padding*2 + bgWidth) / 2);
+	}
+	else if (origin == 2) {
+		posX = posX - (borderWidth*2 + padding*2 + bgWidth);
+	}
+	else if (origin == 3) {
+		posX = posX - (borderWidth*2 + padding*2 + bgWidth);
+		posY = posY - ((borderWidth*2 + padding*2 + 16) / 2);
+	}
+	else if (origin == 4) {
+		posX = posX - (borderWidth*2 + padding*2 + bgWidth);
+		posY = posY - (borderWidth*2 + padding*2 + 16);
+	}
+	else if (origin == 5) {
+		posX = posX - ((borderWidth*2 + padding*2 + bgWidth) / 2);
+		posY = posY - (borderWidth*2 + padding*2 + 16);
+	}
+	else if (origin == 6) {
+		posY = posY - (borderWidth*2 + padding*2 + 16);
+	}
+	else if (origin == 7) {
+		posY = posY - ((borderWidth*2 + padding*2 + 16) / 2);
+	}
+	else if (origin == 8) {
+		posX = posX - ((borderWidth*2 + padding*2 + bgWidth) / 2);
+		posY = posY - ((borderWidth*2 + padding*2 + 16) / 2);
+	}
 
 	scr.DrawRect(posX, posY, bgWidth + (borderWidth*2) + (padding*2), borderWidth, border);
 	scr.DrawRect(posX + borderWidth + padding + bgWidth + padding, posY + borderWidth, borderWidth, height, border);
@@ -1475,7 +1734,7 @@ float DegreeToRadian(float degree) {
 }
 
 
-void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, const Color &color) {
+void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, const Color &color, int origin) {
 	u32 rectLength = (radiusEnd*2) / 1.41421356237;
 	u32 miniRadius = rectLength / 2;
 
@@ -1488,6 +1747,36 @@ void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd,
 	else {
 		miniRadius = radiusStart;
 	}
+
+	if (origin == 0) {
+		x = x + radiusEnd;
+		y = y + radiusEnd;
+	}
+	else if (origin == 1) {
+		y = y + radiusEnd;
+	}
+	else if (origin == 2) {
+		x = x - radiusEnd;
+		y = y + radiusEnd;
+	}
+	else if (origin == 3) {
+		x = x - radiusEnd;
+	}
+	else if (origin == 4) {
+		x = x - radiusEnd;
+		y = y - radiusEnd;
+	}
+	else if (origin == 5) {
+		y = y - radiusEnd;
+	}
+	else if (origin == 6) {
+		x = x + radiusEnd;
+		y = y - radiusEnd;
+	}
+	else if (origin == 7) {
+		x = x + radiusEnd;
+	}
+	else if (origin == 8) { }
 
 	for (int r = miniRadius; r < radiusEnd; r++) {
 		for (int angle = start; angle < end; angle++) {
@@ -1591,6 +1880,7 @@ import_button_impl.addEventListener("change", function(e) {
 // アイテムエディタ
 var item_types_inp = document.getElementById("item_types");
 var item_screen_inp = document.getElementById("item_screen");
+var item_origin_inp = document.getElementById("item_origins");
 var item_str_inp = document.getElementById("item_text");
 var item_x_inp = document.getElementById("item_x");
 var item_y_inp = document.getElementById("item_y");
@@ -1653,22 +1943,24 @@ item_types_inp.addEventListener("change", function() {
 	}
 	else if (type == "rect") {
 		g_items[g_selecting_index][0] = 1;
-		g_items[g_selecting_index][1] = [show, is_top, comment, x, y, 0, 0, color, true];
+		g_items[g_selecting_index][1] = [show, is_top, comment, x, y, 0, 0, color, true, 0];
 	}
 	else if (type == "draw" || type == "draw_sysfont") {
 		var is_draw = (type == "draw");
 		g_items[g_selecting_index][0] = is_draw ? 2 : 3;
 		if (old_type == 2) { // 古いアイテムが draw
 			var font_align = g_items[g_selecting_index][1][11];
-			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, 11).concat(is_draw ? [] : [true]).concat([font_align]); // fill_background & font_align
+			var origin = g_items[g_selecting_index][1][12];
+			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, 11).concat(is_draw ? [] : [true]).concat([font_align, origin]); // fill_background & font_align
 		}
 		else if (old_type == 3) { // 古いアイテムが draw_sysfont
 			var fill_background = g_items[g_selecting_index][1][11];
 			var font_align = g_items[g_selecting_index][1][12];
-			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, is_draw ? 11 : 12).concat(is_draw ? [] : [fill_background]).concat([font_align]); // fill_background & font_align
+			var origin = g_items[g_selecting_index][1][13];
+			g_items[g_selecting_index][1] = g_items[g_selecting_index][1].slice(0, is_draw ? 11 : 12).concat(is_draw ? [] : [fill_background]).concat([font_align, origin]); // fill_background & font_align & origin
 		}
-		else {
-			g_items[g_selecting_index][1] = [show, is_top, comment, "", x, y, 0, 0, "white", "black", "red"].concat(is_draw ? [] : [true]).concat([8]); // fill_background & font_align
+		else { // デフォルト
+			g_items[g_selecting_index][1] = [show, is_top, comment, "", x, y, 0, 0, "white", "black", "red"].concat(is_draw ? [] : [true]).concat([8, 0]); // fill_background & font_align & origin
 		}
 	}
 	else if (type == "line") {
@@ -1677,7 +1969,7 @@ item_types_inp.addEventListener("change", function() {
 	}
 	else if (type == "circle") {
 		g_items[g_selecting_index][0] = 5;
-		g_items[g_selecting_index][1] = [show, is_top, comment, x, y, 0, 0, 0, 360, color];
+		g_items[g_selecting_index][1] = [show, is_top, comment, x, y, 0, 0, 0, 360, color, 8];
 	}
 
 	update();
@@ -1688,6 +1980,26 @@ item_screen_inp.addEventListener("change", function() {
 	g_items[g_selecting_index][1][1] = document.getElementById("item_screen").checked;
 	update();
 });
+
+// Origin
+item_origin_inp.addEventListener("change", function() {
+	var type = g_items[g_selecting_index][0];
+	var origin = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"].indexOf(get_value("item_origins"));
+	if (type == 1) { // Draw
+		var propertie_index = 9;
+	}
+	else if (type == 2) { // Draw
+		var propertie_index = 12;
+	}
+	else if (type == 3) { // DrawSysfont
+		var propertie_index = 13;
+	}
+	else if (type == 5) { // Circle
+		var propertie_index = 10;
+	}
+	g_items[g_selecting_index][1][propertie_index] = origin;
+	update();
+})
 
 // Text
 item_str_inp.addEventListener("change", function() {
