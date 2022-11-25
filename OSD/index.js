@@ -858,7 +858,7 @@ function output_generated_code() {
 			var color = to_ctrpf_color(properties[7]);
 			var filled = properties[8];
 			var origin = properties[9];
-			var code = comment_out + scr + `.DrawRect(${x}, ${y}, ${width}, ${height}, ${color}, ${filled}, ${origin});${comment}`;
+			var code = comment_out + `DrawRectPlus(${scr}, ${x}, ${y}, ${width}, ${height}, ${color}, ${filled}, ${origin});${comment}`;
 			g_generated_codes.push(code);
 		}
 
@@ -1327,7 +1327,7 @@ function draw_items() {
 			var color = to_css_color(properties[7]);
 			var filled = properties[8];
 			var origin = properties[9];
-			c_draw_rect(scr, x, y, width, height, color, filled, origin);
+			c_draw_rect_plus(scr, x, y, width, height, color, filled, origin);
 		}
 
 		else if (type == 2) { // Draw
