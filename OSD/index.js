@@ -140,6 +140,40 @@ function c_draw(elm, str, pos_x, pos_y, foreground="white", background="black") 
 }
 
 
+// Draw Character with background
+function draw_character(elm, char_index, pos_x, pos_y, foreground, background)  {
+	for (var yy = 0; yy < 10; ++yy) {
+		var char_pos = (char_index*10) + yy;
+		for (var xx = 6; xx > 0; --xx) {
+			draw_pixel(elm, pos_x + (6 - xx), pos_y + yy, ((font[char_pos] >> xx) & 0b1) ? foreground : background);
+		}
+	}
+}
+
+
+// Draw String with Linux font
+function draw_string_linuxfont(elm, string, pos_x, pos_y, foreground, background) {
+	for (var x = 0; x < 2; x++) {
+		for (var y = 0; y < 10; y++) {
+			draw_pixel(elm, pos_x + x, pos_y + y, background);
+		}
+	}
+	pos_x += 2;
+	for (var i = 0; i < string.length; i++) {
+		var c = string[i].charCodeAt();
+		if (c == 0xFF) ///< Lazy fix for 0x18 arrow symbol
+			c = 0x18;
+		if (c == 0xFE) ///< Lazy fix for 0x1B arrow symbol
+			c = 0x1B;
+		draw_character(elm, c, pos_x, pos_y, foreground, background);
+		pos_x += 6;
+	}
+}
+
+
+var c_draw_linuxfont = draw_string_linuxfont;
+
+
 // u32 DrawSysfont(const std::string &str, u32 posX, u32 posY, const Color &foreground = Color::White) const;
 function c_draw_sysfont(elm, str, pos_x, pos_y, foreground="white") {
 	if (elm.getContext) {
@@ -155,7 +189,8 @@ function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, 
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "10px Noto Mono";
-		var bg_width = ctx.measureText(str).width;
+		// var bg_width = ctx.measureText(str).width;
+		var bg_width = 2 + 6*str.length;
 		var height = 10 + padding*2;
 
 		// 基点
@@ -253,7 +288,8 @@ function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, 
 			font_y = pos_y + border_width + padding;
 		}
 
-		c_draw(
+		// c_draw(
+		c_draw_linuxfont(
 			elm,
 			str,
 			font_x,
@@ -1985,7 +2021,7 @@ item_screen_inp.addEventListener("change", function() {
 item_origin_inp.addEventListener("change", function() {
 	var type = g_items[g_selecting_index][0];
 	var origin = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"].indexOf(get_value("item_origins"));
-	if (type == 1) { // Draw
+	if (type == 1) { // Rect
 		var propertie_index = 9;
 	}
 	else if (type == 2) { // Draw
