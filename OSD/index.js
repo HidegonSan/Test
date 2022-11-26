@@ -1142,6 +1142,7 @@ function set_item_editor() {
 	"use strict";
 	// まず全てのアイテム入力要素を隠す
 	document.getElementById("item_color2_checkbox").classList.add("hide");
+	document.getElementById("click_move_mode_block").classList.add("hide");
 	var editor_elements = document.getElementsByClassName("item_editor_block");
 	for (var i=0; i<editor_elements.length; i++) {
 		editor_elements[i].classList.add("hide");
@@ -1330,7 +1331,7 @@ function set_item_editor() {
 		var x2 = properties[5];
 		var y2 = properties[6];
 		var color = to_css_color(properties[7]);
-		show_elements(["item_types_block", "item_x_block", "item_y_block", "item_x2_block", "item_y2_block", "item_color1_block", "item_comment_block", "item_screen_block"]);
+		show_elements(["item_types_block", "item_x_block", "item_y_block", "item_x2_block", "item_y2_block", "item_color1_block", "item_comment_block", "item_screen_block", "click_move_mode_block"]);
 		set_value("item_types", "line");
 		set_value("item_x", x.toString());
 		set_value("item_y", y.toString());
@@ -2429,6 +2430,10 @@ top_screen.addEventListener("click", function(e) {
 		g_items[g_selecting_index][1][4] = x;
 		g_items[g_selecting_index][1][5] = y;
 	}
+	else if (type == 4 && !document.getElementById("click_move_mode").checked) { // Line To
+		g_items[g_selecting_index][1][5] = x;
+		g_items[g_selecting_index][1][6] = y;
+	}
 	else {
 		g_items[g_selecting_index][1][3] = x;
 		g_items[g_selecting_index][1][4] = y;
@@ -2454,6 +2459,10 @@ bottom_screen.addEventListener("click", function(e) {
 	if (type == 2 || type == 3) { // Draw, DrawSysfont
 		g_items[g_selecting_index][1][4] = x;
 		g_items[g_selecting_index][1][5] = y;
+	}
+	else if (type == 4 && !document.getElementById("click_move_mode").checked) { // Line To
+		g_items[g_selecting_index][1][5] = x;
+		g_items[g_selecting_index][1][6] = y;
 	}
 	else {
 		g_items[g_selecting_index][1][3] = x;
@@ -2485,6 +2494,8 @@ for (var i=0; i<item_show.length; i++) {
 
 // CTRPF 背景描画 チェック
 document.getElementById("draw_ctrpf").checked = true;
+// アイテムエディタ クリック移動 モード チェック
+document.getElementById("click_move_mode").checked = true;
 
 // 出力コード デフォルト値
 output_code.value = default_output_code;
