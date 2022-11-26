@@ -1,8 +1,10 @@
+"use strict";
 // 関数類 //
 // キャンバス類 //
 
 // 背景色 設定
-function set_backgroundcolor(elm, color="white") {
+function set_backgroundcolor(elm, color) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d");
 		ctx.beginPath();
@@ -13,7 +15,8 @@ function set_backgroundcolor(elm, color="white") {
 
 
 // 長方形 描画
-function draw_rect(elm, start_x, start_y, width, height, color="black") {
+function draw_rect(elm, start_x, start_y, width, height, color) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d");
 		ctx.beginPath();
@@ -24,7 +27,8 @@ function draw_rect(elm, start_x, start_y, width, height, color="black") {
 
 
 // 枠 描画
-function draw_rect_border(elm, start_x, start_y, width, height, border_width=1, color="black") {
+function draw_rect_border(elm, start_x, start_y, width, height, border_width, color) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d");
 		ctx.beginPath();
@@ -38,12 +42,14 @@ function draw_rect_border(elm, start_x, start_y, width, height, border_width=1, 
 
 // 点 描画
 function draw_pixel(elm, x, y, color) {
+	"use strict";
 	draw_rect(elm, x, y, 1, 1, color);
 }
 
 
 // 線 描画
-function draw_line(elm, src_x, src_y, dst_x, dst_y, width=1, color="black") {
+function draw_line(elm, src_x, src_y, dst_x, dst_y, width, color) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d");
 		ctx.lineWidth = width;
@@ -57,7 +63,8 @@ function draw_line(elm, src_x, src_y, dst_x, dst_y, width=1, color="black") {
 
 
 // テキスト 描画
-function draw_string(elm, string, x, y, size=10, color="white", font="px Noto") {
+function draw_string(elm, string, x, y, size, color, font) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d");
 		ctx.font = size.toString() + font;
@@ -69,7 +76,8 @@ function draw_string(elm, string, x, y, size=10, color="white", font="px Noto") 
 
 
 // 円 描画
-function draw_circle(elm, pos_x, pos_y, radius_start, radius_end, start=0, end=360, color="black", origin = 8) {
+function draw_circle(elm, pos_x, pos_y, radius_start, radius_end, start, end, color, origin) {
+	"use strict";
 	// C++側では高速化のために以下の処理を行うが、JSでは汚くなるので使用しない
 	// var rect_length = parseInt((radius_end*2) / 1.41421356237);
 	//var mini_radius = parseInt(rect_length / 2);
@@ -130,7 +138,8 @@ function draw_circle(elm, pos_x, pos_y, radius_start, radius_end, start=0, end=3
 
 // キャンバス 実機寄り関数類 //
 // u32 Draw(const std::string &str, u32 posX, u32 posY, const Color &foreground = Color::White, const Color &background = Color::Black) const;
-function c_draw(elm, str, pos_x, pos_y, foreground="white", background="black") {
+function c_draw(elm, str, pos_x, pos_y, foreground, background) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "10px Noto Mono";
@@ -141,7 +150,8 @@ function c_draw(elm, str, pos_x, pos_y, foreground="white", background="black") 
 
 
 // Draw Character with background
-function draw_character(elm, char_index, pos_x, pos_y, foreground, background)  {
+function draw_character(elm, char_index, pos_x, pos_y, foreground, background) {
+	"use strict";
 	for (var yy = 0; yy < 10; ++yy) {
 		var char_pos = (char_index*10) + yy;
 		for (var xx = 6; xx > 0; --xx) {
@@ -153,6 +163,7 @@ function draw_character(elm, char_index, pos_x, pos_y, foreground, background)  
 
 // Draw String with Linux font
 function draw_string_linuxfont(elm, string, pos_x, pos_y, foreground, background) {
+	"use strict";
 	for (var x = 0; x < 2; x++) {
 		for (var y = 0; y < 10; y++) {
 			draw_pixel(elm, pos_x + x, pos_y + y, background);
@@ -175,17 +186,19 @@ var c_draw_linuxfont = draw_string_linuxfont;
 
 
 // u32 DrawSysfont(const std::string &str, u32 posX, u32 posY, const Color &foreground = Color::White) const;
-function c_draw_sysfont(elm, str, pos_x, pos_y, foreground="white") {
+function c_draw_sysfont(elm, str, pos_x, pos_y, foreground) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "14px Noto";
-		draw_string(elm, str, pos_x, pos_y + 16, 14, foreground);
+		draw_string(elm, str, pos_x, pos_y + 16, 14, foreground, "px Noto");
 	}
 }
 
 
 // void DrawPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign, int origin)
-function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, font_align, origin = 0) {
+function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, font_align, origin) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "10px Noto Mono";
@@ -302,7 +315,8 @@ function c_draw_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, 
 
 
 // DrawSysfontPlus(const Screen &scr, const std::string &str, u32 posX, u32 posY, u32 borderWidth, u32 padding, const Color &foreground, const Color &background, const Color &border, int fontAlign, int origin)
-function c_draw_sysfont_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, fillBackground, font_align, origin = 0) {
+function c_draw_sysfont_plus(elm, str, pos_x, pos_y, border_width, padding, foreground, background, border_color, fillBackground, font_align, origin) {
+	"use strict";
 	if (elm.getContext) {
 		var ctx = elm.getContext("2d")
 		ctx.font = "14px Noto";
@@ -419,7 +433,8 @@ function c_draw_sysfont_plus(elm, str, pos_x, pos_y, border_width, padding, fore
 
 
 // void DrawRect(u32 posX, u32 posY, u32 width, u32 height, const Color &color, bool filled = true) const;
-function c_draw_rect(elm, pos_x, pos_y, width, height, color, filled = true) {
+function c_draw_rect(elm, pos_x, pos_y, width, height, color, filled) {
+	"use strict";
 	if (filled) {
 		draw_rect(elm, pos_x, pos_y, width, height, color);
 	}
@@ -430,7 +445,8 @@ function c_draw_rect(elm, pos_x, pos_y, width, height, color, filled = true) {
 
 
 // void DrawRectPlus(const Screen &scr, u32 posX, u32 posY, u32 width, u32 height, const Color &color, bool filled = true, int origin = 0)
-function c_draw_rect_plus(elm, pos_x, pos_y, width, height, color, filled = true, origin = 0) {
+function c_draw_rect_plus(elm, pos_x, pos_y, width, height, color, filled, origin) {
+	"use strict";
 	// 基点
 	// Origin: 0=top_left, 1=top, 2=top_right, 3=middle_right, 4=bottom_right, 5=bottom, 6=bottom_left, 7=middle_left, 8=center (左上から時計回り)
 	if (origin == 0) { // top_left
@@ -471,18 +487,21 @@ function c_draw_rect_plus(elm, pos_x, pos_y, width, height, color, filled = true
 
 // void DrawPixel(u32 posX, u32 posY, const Color &color) const;
 function c_draw_pixel(elm, pos_x, pos_y, color) {
+	"use strict";
 	draw_pixel(elm, pos_x, pos_y, color);
 }
 
 
 // void DrawLine(const Screen &scr, int srcX, int srcY, int dstX, int dstY, const Color &color)
 function c_draw_line(elm, src_x, src_y, dst_x, dst_y, color) {
+	"use strict";
 	draw_line(elm, src_x, src_y, dst_x, dst_y, 2, color);
 }
 
 
 // void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd, int start, int end, Color &color, int origin)
-function c_draw_circle(elm, x, y, radius_start, radius_end, start=0, end=360, color="black", origin = 8) {
+function c_draw_circle(elm, x, y, radius_start, radius_end, start, end, color, origin) {
+	"use strict";
 	draw_circle(elm, x, y, radius_start, radius_end, start, end, color, origin)
 }
 // キャンバス 実機寄り関数類 終了 //
@@ -491,12 +510,14 @@ function c_draw_circle(elm, x, y, radius_start, radius_end, start=0, end=360, co
 // 便利関数類 //
 // 度 → ラジアン
 function degree_to_radian(degree) {
+	"use strict";
 	return degree*(Math.PI / 180);
 }
 
 
 // ゼロ埋め
 function zfill(num, length) {
+	"use strict";
 	return ("0".repeat(length) + num).slice(-length);
 }
 
@@ -504,6 +525,7 @@ function zfill(num, length) {
 // Thanks: https://qiita.com/simiraaaa/items/2e7478d72f365aa48356
 // クリップボードにコピーする
 function copy(string) {
+	"use strict";
 	var tmp = document.createElement("div");
 	var pre = document.createElement("pre");
 	pre.style.webkitUserSelect = "auto";
@@ -522,6 +544,7 @@ function copy(string) {
 
 // テキストとしてダウンロードする
 function download_text(text, file_name) {
+	"use strict";
 	var tmp = document.createElement("a");
 	tmp.href = "data:text/plain," + encodeURIComponent(text);
 	tmp.download = file_name;
@@ -531,6 +554,7 @@ function download_text(text, file_name) {
 
 // 今日の日付・時間 オレオレフォーマット 取得
 function get_date() {
+	"use strict";
 	var date = new Date();
 	var y = date.getFullYear();
 	var M = zfill((date.getMonth() + 1), 2);
@@ -545,6 +569,7 @@ function get_date() {
 // Thanks: https://qiita.com/FumioNonaka/items/678a1e74ab73e23d6f14
 // 要素 入れ替え
 function replace_array_elements(array, targetId, sourceId) {
+	"use strict";
 	return array.reduce((resultArray, element, id, originalArray) => [
 		...resultArray,
 		id === targetId ? originalArray[sourceId] :
@@ -556,12 +581,14 @@ function replace_array_elements(array, targetId, sourceId) {
 
 // クッキーを設定する
 function set_cookie(key_, value_) {
+	"use strict";
 	document.cookie = key_ + "=" + encodeURIComponent(value_) + "; max-age=2147483647; SameSite=Strict; Secure";
 }
 
 
 // 全てのクッキーを取得する
 function get_all_cookies() {
+	"use strict";
 	var arr = new Array();
 	var splitted_cookies = document.cookie.split("; ");
 
@@ -577,6 +604,7 @@ function get_all_cookies() {
 // Thanks: https://stackoverflow.com/questions/179355/clearing-all-cookies-with-javascript
 // 全てのクッキーを削除する
 function delete_all_cookies() {
+	"use strict";
 	var cookies = document.cookie.split(";");
 
 	for (var i=0; i<cookies.length; i++) {
@@ -590,14 +618,15 @@ function delete_all_cookies() {
 
 // Thanks: https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
 // indexOf all
-function get_indices_of(searchStr, str, caseSensitive) {
+function get_indices_of(searchStr, str, case_sensitive) {
+	"use strict";
 	var searchStrLen = searchStr.length;
 
 	if (searchStrLen == 0) {
 		return [];
 	}
 	var startIndex = 0, index, indices = [];
-	if (!caseSensitive) {
+	if (!case_sensitive) {
 		str = str.toLowerCase();
 		searchStr = searchStr.toLowerCase();
 	}
@@ -613,6 +642,7 @@ function get_indices_of(searchStr, str, caseSensitive) {
 // Thanks: https://yamanoku.hatenablog.com/entry/2016/07/18/XSS%E5%AF%BE%E7%AD%96%E3%81%AE%E3%82%BB%E3%82%AD%E3%83%A5%E3%82%A2%E3%81%AAJS%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9%EF%BC%88%E5%9F%BA%E6%9C%AC%E7%9A%84%E3%81%AA%E3%81%93%E3%81%A8%EF%BC%89
 // XSSが発生しないようにサニタイズする
 function escape_html(str) {
+	"use strict";
 	str = str.replace(/&/g, "&amp;");
 	str = str.replace(/</g, "&lt;");
 	str = str.replace(/>/g, "&gt;");
@@ -624,12 +654,14 @@ function escape_html(str) {
 
 // IDを受け取り、そのIDの要素に値をセットする
 function set_value(id, value) {
+	"use strict";
 	document.getElementById(id).value = value;
 }
 
 
 // IDを受け取り、そのIDの値を返す
 function get_value(id) {
+	"use strict";
 	return document.getElementById(id).value;
 }
 
@@ -637,6 +669,7 @@ function get_value(id) {
 // Thanks: https://stackoverflow.com/questions/1573053/javascript-function-to-convert-color-names-to-hex-codes
 // 色名をカラーコードに変換する
 function color_name_to_hex(color) {
+	"use strict";
 	var colors = {"aliceblue":"#f0f8ff","antiquewhite":"#faebd7","aqua":"#00ffff","aquamarine":"#7fffd4","azure":"#f0ffff",
 	"beige":"#f5f5dc","bisque":"#ffe4c4","black":"#000000","blanchedalmond":"#ffebcd","blue":"#0000ff","blueviolet":"#8a2be2","brown":"#a52a2a","burlywood":"#deb887",
 	"cadetblue":"#5f9ea0","chartreuse":"#7fff00","chocolate":"#d2691e","coral":"#ff7f50","cornflowerblue":"#6495ed","cornsilk":"#fff8dc","crimson":"#dc143c","cyan":"#00ffff",
@@ -724,6 +757,7 @@ void DrawOSD(void) {
 
 // CTRPF 色形式 変換
 function to_ctrpf_color(color) {
+	"use strict";
 	if (Array.isArray(color)) { // (50, 50, 50)
 		return `Color(${color[0]}, ${color[1]}, ${color[2]})`;
 	}
@@ -741,6 +775,7 @@ function to_ctrpf_color(color) {
 
 // CSS 色形式 変換
 function to_css_color(color) {
+	"use strict";
 	if (color.indexOf("::") != -1) { // Color::Red
 		return color.slice(7, color.length).toLowerCase();
 	}
@@ -758,12 +793,14 @@ function to_css_color(color) {
 
 // アイテム 追加
 function add_item(index, kind, properties) {
+	"use strict";
 	g_items.splice(index, 0, [kind, properties]);
 }
 
 
 // アイテム 削除
 function remove_item(index) {
+	"use strict";
 	g_items.splice(index, 1)
 	if (g_selecting_index != -1 && (index < g_selecting_index || index == g_items.length)) { // 選択中より上にあるアイテムを削除すると選択アイテムがずれるのでそれを修正する
 		g_selecting_index--;
@@ -773,6 +810,7 @@ function remove_item(index) {
 
 // アイテム 入れ替え 上
 function up_item(index) {
+	"use strict";
 	if (2 <= g_items.length && 0 < index) {
 		g_items = replace_array_elements(g_items, index, index - 1);
 		if ((index - 1) == g_selecting_index) { // 真上のアイテムが選択中の場合 選択インデックスを足す
@@ -788,6 +826,7 @@ function up_item(index) {
 
 // アイテム 入れ替え 下
 function down_item(index) {
+	"use strict";
 	if (2 <= g_items.length && index < (g_items.length - 1)) {
 		g_items = replace_array_elements(g_items, index, index + 1);
 		if ((index + 1) == g_selecting_index) { // 真下のアイテムが選択中の場合 選択インデックスを引く
@@ -803,17 +842,20 @@ function down_item(index) {
 
 // アイテム 表示 非表示 切り替え
 function toggle_visibility(index) {
+	"use strict";
 	g_items[index][1][0] = !g_items[index][1][0];
 }
 
 
 // 背景 描画
 function draw_background() {
+	"use strict";
 	// 上画面
 	if (g_top_screen_background_url && top_screen.getContext) {
 		var ctx = top_screen.getContext("2d");
 		var img = new Image;
 		img.addEventListener("load", function() {
+			"use strict";
 			ctx.drawImage(img, 0, 0);
 			if (document.getElementById("draw_ctrpf").checked) { // この条件式がないとdraw_ctrpf_backgroundのelse内で背景削除コードが働き、ユーザ背景も消える
 				draw_ctrpf_background(); // CTRPF 背景 描画
@@ -827,6 +869,7 @@ function draw_background() {
 		var ctx_ = bottom_screen.getContext("2d");
 		var img_ = new Image;
 		img_.addEventListener("load", function() {
+			"use strict";
 			ctx_.drawImage(img_, 0, 0);
 			if (document.getElementById("draw_ctrpf").checked) { // この条件式がないとdraw_ctrpf_backgroundのelse内で背景削除コードが働き、ユーザ背景も消える
 				draw_ctrpf_background(); // CTRPF 背景 描画
@@ -840,6 +883,7 @@ function draw_background() {
 
 // CTRPF 背景 描画
 function draw_ctrpf_background() {
+	"use strict";
 	// 背景 描画 選択済み
 	if (document.getElementById("draw_ctrpf").checked) {
 		// ベースウィンドウ 描画
@@ -859,6 +903,7 @@ function draw_ctrpf_background() {
 
 // コード 生成
 function output_generated_code() {
+	"use strict";
 	// Types: Pixel, Rect, Draw, DrawSysfont, Line, Circle
 	g_generated_codes = []; // 一旦リセット
 
@@ -964,11 +1009,13 @@ function output_generated_code() {
 
 // アイテムリスト 選択 イベント
 function items_select_event() {
+	"use strict";
 	// オレンジ 強調
 	var elements = document.getElementsByClassName("item");
 
 	for (var i=0; i<elements.length; i++) {
 		elements[i].addEventListener("click", function(e) {
+			"use strict";
 			var items = Array.prototype.slice.call(document.querySelectorAll("#items > div"));
 			var target = e.target;
 			if (target.className.indexOf("item_ignore") != -1) { // チェックボックス等 無視
@@ -992,6 +1039,7 @@ function items_select_event() {
 	for (var i=0; i<item_buttons.length; i++) {
 		var item_button = item_buttons[i];
 		item_button.addEventListener("click", function(e) {
+			"use strict";
 			var items = Array.prototype.slice.call(document.querySelectorAll("#items > div"));
 			var target = e.target;
 			while (target.parentNode.id != "items") { // 親要素になるまでループ
@@ -1021,6 +1069,7 @@ function items_select_event() {
 
 // アイテムリスト 更新
 function update_items() {
+	"use strict";
 	var items = document.getElementById("items");
 	items.innerHTML = ""; // 一旦空にする
 	items.innerHTML += '<hr><button id="item_add" class="update_">Add Item</button>'; // アイテム追加ボタン
@@ -1055,12 +1104,14 @@ function update_items() {
 	var update_buttons = document.getElementsByClassName("update_");
 	for (var i=0; i<update_buttons.length; i++) {
 		update_buttons[i].addEventListener("click", function() {
+			"use strict";
 			update();
 		});
 	}
 	// 新規アイテム追加
 	var add_item_button = document.getElementById("item_add");
 	add_item_button.addEventListener("click", function() {
+		"use strict";
 		add_item(g_selecting_index, -1, [false]);
 		update();
 	});
@@ -1072,12 +1123,14 @@ function update_items() {
 
 // 指定IDの要素を表示する
 function show_element(id) {
+	"use strict";
 	document.getElementById(id).classList.remove("hide");
 }
 
 
 // IDをリストで受け取り、その全ての要素を表示する
 function show_elements(ids) {
+	"use strict";
 	for (var i=0; i<ids.length; i++) {
 		show_element(ids[i]);
 	}
@@ -1085,7 +1138,8 @@ function show_elements(ids) {
 
 
 // アイテムエディタ セット
-function set_item_editor(index) {
+function set_item_editor() {
+	"use strict";
 	// まず全てのアイテム入力要素を隠す
 	document.getElementById("item_color2_checkbox").classList.add("hide");
 	var editor_elements = document.getElementsByClassName("item_editor_block");
@@ -1334,6 +1388,7 @@ function set_item_editor(index) {
 
 // アイテム 描画
 function draw_items() {
+	"use strict";
 	g_generated_codes = [];
 	var g_items_reversed = [...g_items].reverse(); // 配列を反対にすることでアイテムリストの順番と描画が直感的になる
 
@@ -1428,6 +1483,7 @@ function draw_items() {
 
 // リセット
 function reset() {
+	"use strict";
 	g_items = [];
 	g_selecting_index = -1;
 	delete_all_cookies();
@@ -1440,18 +1496,21 @@ function reset() {
 
 // エクスポート
 function export_() {
+	"use strict";
 	download_text(JSON.stringify([g_selecting_index, document.getElementById("draw_ctrpf").checked].concat(g_items)), "osd_designer_" + get_date() + ".json");
 }
 
 
 // 現在の状態をCookieに保存
 function save() {
+	"use strict";
 	set_cookie("save", JSON.stringify([g_selecting_index, document.getElementById("draw_ctrpf").checked, g_items]));
 }
 
 
 // Cookieに保存した状態を復元
 function restore() {
+	"use strict";
 	try {
 		var save_data = JSON.parse(get_all_cookies()["save"]);
 		g_selecting_index = parseInt(save_data[0]); // 選択中インデックス
@@ -1476,6 +1535,7 @@ function restore() {
 
 // メインループ
 function update() {
+	"use strict";
 	set_backgroundcolor(top_screen, "white");                // 一旦まっさらにする (上画面)
 	set_backgroundcolor(bottom_screen, "white");             // 一旦まっさらにする (下画面)
 	draw_background();                                       // 背景 描画
@@ -1485,7 +1545,7 @@ function update() {
 	}
 	output_generated_code();                                 // コード 生成
 	update_items();                                          // アイテムリスト 更新 & イベント 設定
-	set_item_editor(g_selecting_index);                      // 現在選択中のアイテムに合ったアイテムエディタを設定する
+	set_item_editor();                                       // 現在選択中のアイテムに合ったアイテムエディタを設定する
 	draw_items();                                            // キャンバス 描画
 	save();                                                  // 保存
 
@@ -1540,7 +1600,7 @@ void DrawLine(const Screen &scr, int srcX, int srcY, int dstX, int dstY, const C
 }
 
 
-void DrawRectPlus(const Screen &scr, u32 posX, u32 posY, u32 width, u32 height, const Color &color, bool filled = true, int origin = 0) {
+void DrawRectPlus(const Screen &scr, u32 posX, u32 posY, u32 width, u32 height, const Color &color, bool filled, int origin) {
 	if (origin == 0) { }
 	else if (origin == 1) {
 		posX = posX - (width / 2);
@@ -1829,6 +1889,7 @@ void DrawCircle(const Screen &scr, u32 x, u32 y, u32 radiusStart, u32 radiusEnd,
 // 出力コード コピー
 var copy_button = document.getElementById("copy_button");
 copy_button.addEventListener("click", function() {
+	"use strict";
 	copy(copyright + output_code.value);
 	alert("Copied!");
 });
@@ -1836,6 +1897,7 @@ copy_button.addEventListener("click", function() {
 // 出力コード 保存
 var save_button = document.getElementById("save_button");
 save_button.addEventListener("click", function() {
+	"use strict";
 	download_text(copyright + output_code.value, "osd_editor_" + get_date() + ".cpp");
 });
 
@@ -1843,6 +1905,7 @@ save_button.addEventListener("click", function() {
 var background_image_top = document.getElementById("background_image_top");
 var background_image_top_impl = document.getElementById("background_image_top_impl");
 background_image_top.addEventListener("click", function() {
+	"use strict";
 	background_image_top_impl.click();
 });
 
@@ -1850,17 +1913,20 @@ background_image_top.addEventListener("click", function() {
 var background_image_bottom = document.getElementById("background_image_bottom");
 var background_image_bottom_impl = document.getElementById("background_image_bottom_impl");
 background_image_bottom.addEventListener("click", function() {
+	"use strict";
 	background_image_bottom_impl.click();
 });
 
 // 上画面 背景 描画
 background_image_top_impl.addEventListener("change", function(e) {
+	"use strict";
 	g_top_screen_background_url = URL.createObjectURL(e.target.files[0]);
 	draw_background();
 });
 
 // 下画面 背景 描画
 background_image_bottom_impl.addEventListener("change", function(e) {
+	"use strict";
 	g_bottom_screen_background_url = URL.createObjectURL(e.target.files[0]);
 	draw_background();
 });
@@ -1868,6 +1934,7 @@ background_image_bottom_impl.addEventListener("change", function(e) {
 // 背景 クリア
 var clear_background_button = document.getElementById("clear_background");
 clear_background_button.addEventListener("click", function() {
+	"use strict";
 	set_backgroundcolor(top_screen, "white");
 	set_backgroundcolor(bottom_screen, "white");
 	g_top_screen_background_url = "";
@@ -1877,6 +1944,7 @@ clear_background_button.addEventListener("click", function() {
 // リセット
 var reset_button = document.getElementById("reset");
 reset_button.addEventListener("click", function() {
+	"use strict";
 	if (confirm("Are you sure want to reset?")) {
 		reset();
 	}
@@ -1885,6 +1953,7 @@ reset_button.addEventListener("click", function() {
 // セーブデータ ダウンロード
 var export_button = document.getElementById("export");
 export_button.addEventListener("click", function() {
+	"use strict";
 	export_();
 });
 
@@ -1892,16 +1961,19 @@ export_button.addEventListener("click", function() {
 var import_button_impl = document.getElementById("import_impl");
 var import_button = document.getElementById("import");
 import_button.addEventListener("click", function() {
+	"use strict";
 	if (confirm("Import save data will be delete now save data.\nAre you sure want to continue?")) {
 		import_button_impl.click();
 	}
 });
 import_button_impl.addEventListener("change", function(e) {
+	"use strict";
 	var backup = g_items;
 	var files = e.target.files;
 	var reader = new FileReader();
 	reader.readAsText(files[0]);
-	reader.onload = function(ee) {
+	reader.onload = function() {
+		"use strict";
 		try {
 			var res = JSON.parse(reader.result);
 			g_selecting_index = parseInt(res[0]); // 選択中 インデックス
@@ -1946,6 +2018,7 @@ var item_align_imp = document.getElementById("item_aligns");
 
 // Types
 item_types_inp.addEventListener("change", function() {
+	"use strict";
 	var type = document.getElementById("item_types").value;
 	var old_type = g_items[g_selecting_index][0];
 
@@ -2016,12 +2089,14 @@ item_types_inp.addEventListener("change", function() {
 
 // Screen
 item_screen_inp.addEventListener("change", function() {
+	"use strict";
 	g_items[g_selecting_index][1][1] = document.getElementById("item_screen").checked;
 	update();
 });
 
 // Origin
 item_origin_inp.addEventListener("change", function() {
+	"use strict";
 	var type = g_items[g_selecting_index][0];
 	var origin = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"].indexOf(get_value("item_origins"));
 	if (type == 1) { // Rect
@@ -2042,12 +2117,14 @@ item_origin_inp.addEventListener("change", function() {
 
 // Text
 item_str_inp.addEventListener("change", function() {
+	"use strict";
 	g_items[g_selecting_index][1][3] = get_value("item_text");
 	update();
 })
 
 // X
 item_x_inp.addEventListener("change", function() {
+	"use strict";
 	var type = g_items[g_selecting_index][0];
 	var value = parseInt(get_value("item_x"));
 	if (isNaN(value) || value < 0) {
@@ -2066,6 +2143,7 @@ item_x_inp.addEventListener("change", function() {
 
 // Y
 item_y_inp.addEventListener("change", function() {
+	"use strict";
 	var type = g_items[g_selecting_index][0];
 	var value = parseInt(get_value("item_y"));
 	if (isNaN(value) || value < 0) {
@@ -2084,6 +2162,7 @@ item_y_inp.addEventListener("change", function() {
 
 // X2
 item_x2_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_x2"));
 	if (isNaN(value) || value < 0) {
 		value = 0;
@@ -2095,6 +2174,7 @@ item_x2_inp.addEventListener("change", function() {
 
 // Y2
 item_y2_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_y2"));
 	if (isNaN(value) || value < 0) {
 		value = 0;
@@ -2106,6 +2186,7 @@ item_y2_inp.addEventListener("change", function() {
 
 // Width
 item_width_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_width"));
 	if (isNaN(value) || value < 0) {
 		value = 0;
@@ -2117,6 +2198,7 @@ item_width_inp.addEventListener("change", function() {
 
 // Height
 item_height_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_height"));
 	if (isNaN(value) || value < 0) {
 		value = 0;
@@ -2128,6 +2210,7 @@ item_height_inp.addEventListener("change", function() {
 
 // Border Width
 item_border_width_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_border_width"));
 	if (isNaN(value) || value < 0) {
 		value = 0;
@@ -2139,6 +2222,7 @@ item_border_width_inp.addEventListener("change", function() {
 
 // Padding
 item_padding_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_padding"));
 	if (isNaN(value) || value < 0) {
 		value = 0;
@@ -2150,6 +2234,7 @@ item_padding_inp.addEventListener("change", function() {
 
 // Radius Start
 item_radius_start_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_radius_start"));
 	var end = parseInt(get_value("item_radius_end"));
 	if (isNaN(value) || value < 0) {
@@ -2165,6 +2250,7 @@ item_radius_start_inp.addEventListener("change", function() {
 
 // Radius End
 item_radius_end_inp.addEventListener("change", function() {
+	"use strict";
 	var start = parseInt(get_value("item_radius_start"));
 	var value = parseInt(get_value("item_radius_end"));
 	if (isNaN(value) || value < 0) {
@@ -2180,6 +2266,7 @@ item_radius_end_inp.addEventListener("change", function() {
 
 // Arc Start
 item_arc_start_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_arc_start"));
 	if (isNaN(value)) {
 		value = 0;
@@ -2191,6 +2278,7 @@ item_arc_start_inp.addEventListener("change", function() {
 
 // Arc End
 item_arc_end_inp.addEventListener("change", function() {
+	"use strict";
 	var value = parseInt(get_value("item_arc_end"));
 	if (isNaN(value)) {
 		value = 0;
@@ -2202,6 +2290,7 @@ item_arc_end_inp.addEventListener("change", function() {
 
 // Color1
 item_color1_inp.addEventListener("change", function() {
+	"use strict";
 	var value = get_value("item_color1");
 	var type =g_items[g_selecting_index][0];
 
@@ -2226,6 +2315,7 @@ item_color1_inp.addEventListener("change", function() {
 
 // ColorPicker1
 item_colorpicker1_inp.addEventListener("change", function() {
+	"use strict";
 	var value = get_value("item_colorpicker1");
 	var type =g_items[g_selecting_index][0];
 
@@ -2250,6 +2340,7 @@ item_colorpicker1_inp.addEventListener("change", function() {
 
 // Color2
 item_color2_inp.addEventListener("change", function() {
+	"use strict";
 	var value = get_value("item_color2");
 	g_items[g_selecting_index][1][9] = value;
 	update();
@@ -2257,6 +2348,7 @@ item_color2_inp.addEventListener("change", function() {
 
 // ColorPicker2
 item_colorpicker2_inp.addEventListener("change", function() {
+	"use strict";
 	var value = get_value("item_colorpicker2");
 	g_items[g_selecting_index][1][9] = value;
 	update();
@@ -2264,6 +2356,7 @@ item_colorpicker2_inp.addEventListener("change", function() {
 
 // Color3
 item_color3_inp.addEventListener("change", function() {
+	"use strict";
 	var value = get_value("item_color3");
 	g_items[g_selecting_index][1][10] = value;
 	update();
@@ -2271,6 +2364,7 @@ item_color3_inp.addEventListener("change", function() {
 
 // ColorPicker3
 item_colorpicker3_inp.addEventListener("change", function() {
+	"use strict";
 	var value = get_value("item_colorpicker3");
 	g_items[g_selecting_index][1][10] = value;
 	update();
@@ -2278,24 +2372,28 @@ item_colorpicker3_inp.addEventListener("change", function() {
 
 // Filled
 item_filled_inp.addEventListener("change", function() {
+	"use strict";
 	g_items[g_selecting_index][1][8] = document.getElementById("item_filled").checked;
 	update();
 });
 
 // Comment
 item_comment_inp.addEventListener("change", function() {
+	"use strict";
 	g_items[g_selecting_index][1][2] = get_value("item_comment");
 	update();
 });
 
 // Background Filled
 item_fill_background_imp.addEventListener("change", function() {
+	"use strict";
 	g_items[g_selecting_index][1][11] = document.getElementById("item_color2_checkbox").checked;
 	update();
 });
 
 // Font Align
 item_align_imp.addEventListener("change", function() {
+	"use strict";
 	var type = g_items[g_selecting_index][0];
 	var font_align = ["top_left", "top", "top_right", "middle_right", "bottom_right", "bottom", "bottom_left", "middle_left", "center"].indexOf(get_value("item_aligns"));
 	g_items[g_selecting_index][1][type == 2 ? 11 : 12] = font_align;
@@ -2306,6 +2404,7 @@ item_align_imp.addEventListener("change", function() {
 // タッチ移動
 // Thanks: https://stackoverflow.com/questions/55677/how-do-i-get-the-coordinates-of-a-mouse-click-on-a-canvas-element
 function get_cursor_position(canvas, event) {
+	"use strict";
 	const rect = canvas.getBoundingClientRect()
 	const x = event.clientX - rect.left
 	const y = event.clientY - rect.top
@@ -2314,6 +2413,7 @@ function get_cursor_position(canvas, event) {
 
 // 上画面
 top_screen.addEventListener("click", function(e) {
+	"use strict";
 	if (!g_items[g_selecting_index][1][1]) { // 下画面のアイテムを上画面に移動させる
 		g_items[g_selecting_index][1][1] = true;
 	}
@@ -2339,6 +2439,7 @@ top_screen.addEventListener("click", function(e) {
 
 // 下画面
 bottom_screen.addEventListener("click", function(e) {
+	"use strict";
 	if (g_items[g_selecting_index][1][1]) { // 上画面のアイテムを下画面に移動させる
 		g_items[g_selecting_index][1][1] = false;
 	}
@@ -2367,6 +2468,7 @@ bottom_screen.addEventListener("click", function(e) {
 var update_buttons = document.getElementsByClassName("update");
 for (var i=0; i<update_buttons.length; i++) {
 	update_buttons[i].addEventListener("click", function() {
+		"use strict";
 		update();
 	});
 }
