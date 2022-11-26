@@ -202,8 +202,8 @@ body {
 }
 
 
-/* アイテムエディタ 編集中アイテム ID 表示 */
-#item_editor_title span {
+/* アイテムエディタ タイトル横要素*/
+.item_editor_span {
 	font-size: 0.8em;
 	vertical-align: middle;
 	margin-left: 1.5em;
