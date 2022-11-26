@@ -132,7 +132,20 @@
 
 
 		<!-- Start of item editor -->
-		<div id="item_editor_title">&nbsp;Item&nbsp;Editor<span>Editing:&nbsp;---</span><span><label for="click_move">Click&nbsp;move:&nbsp;</label><input type="checkbox" name="click_move" id="click_move"></span></div>
+		<div id="item_editor_title">
+			&nbsp;Item&nbsp;Editor<!--
+			--><span class="item_editor_span">Editing:&nbsp;---</span><!--
+			--><span class="item_editor_span"><!--
+				--><label for="click_move">Click&nbsp;move:&nbsp;</label><!--
+				--><input type="checkbox" name="click_move" id="click_move"><!--
+				--><span id="click_move_mode_block"><!--
+					-->&nbsp;(<!--
+						--><label for="click_move_mode">From:&nbsp;</label><!--
+						--><input type="checkbox" name="click_move_mode" id="click_move_mode"><!--
+					-->)<!--
+				--></span><!--
+			--></span>
+		</div>
 		<div id="item_editor">
 			<span class="item_editor_block" id="item_types_block">
 				<label for="types">Type:</label>
@@ -390,11 +403,11 @@
 		<!-- Start of items -->
 		<div id="items_title">&nbsp;Items<span>(0)</span></div>
 		<div id="items">
-		<!-- Item -->
-		
-		<!-- Item end -->
 		<hr>
 		<button id="item_add" class="update">Add&nbsp;Item</button>
+		<!-- Item -->
+
+		<!-- Item end -->
 		</div>
 		<!-- End of items -->
 		<!-- End of right menu -->
