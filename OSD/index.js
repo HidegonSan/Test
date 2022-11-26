@@ -712,8 +712,8 @@ var g_bottom_screen_background_url = ""; // 下画面 背景 データ
 var default_output_code = `
 /* DrawOSD */
 void DrawOSD(void) {
-	const Screen& topScr = OSD::GetTopScreen();
-	const Screen& btmScr = OSD::GetBottomScreen();
+	const Screen &topScr = OSD::GetTopScreen();
+	const Screen &btmScr = OSD::GetBottomScreen();
 /* {CODE} */
 
 }
@@ -1023,6 +1023,8 @@ function items_select_event() {
 function update_items() {
 	var items = document.getElementById("items");
 	items.innerHTML = ""; // 一旦空にする
+	items.innerHTML += '<hr><button id="item_add" class="update_">Add Item</button>'; // アイテム追加ボタン
+
 	var template = '<hr><div class="item update_" id="{SELECTING}" title="{COMMENT}" ><button class="item_up item_ignore update_" >↑</button><button class="item_down item_ignore update_" >↓</button><input class="item_show item_ignore update_" type="checkbox" {SHOW}><button class="item_remove item_ignore update_" ()>🗑</button><div>{CODE}</div></div>'; // アイテム テンプレート
 
 	for (var i=0; i<g_items.length; i++) {
@@ -1035,7 +1037,8 @@ function update_items() {
 		var selecting = (i == g_selecting_index ? "item_selecting" : ""); // 選択中アイテムならIDを付与
 		items.insertAdjacentHTML("beforeend", template.replace("{COMMENT}", comment).replace("{SHOW}", show).replace("{CODE}", code).replace("{SELECTING}", selecting));
 	}
-	items.innerHTML += '<hr><button id="item_add" class="update_">Add Item</button>'; // アイテム追加ボタン
+
+	items.innerHTML += "<hr>"; // 最後のアイテムの下ボーダー
 
 	// 編集中 アイテム 表示
 	if (g_selecting_index != -1) {
