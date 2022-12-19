@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="content-type" charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+		<title>ボタン変換器</title>
+		<meta name="description" content="CTRPFのボタンとコードを相互変換します" />
+		<meta name="author" content="Hidegon" />
+		<meta name="format-detection" content="telephone=no" />
+
+		<!-- Favicon -->
+		<link rel="icon" href="data:image/x-icon;,">
+
+		<!-- OGP -->
+		<meta property="og:description" content="CTRPFのボタンとコードを相互変換します" />
+		<meta property="og:title" content="CTRPFのボタンとコードを相互変換します" />
+		<meta property="og:url" content="https://HidegonSan.github.io/btn/" />
+		<meta property="og:type" content="article" />
+		<meta property="og:site_name" content="ボタン変換器" />
+		<meta property="og:locale" content="ja_JP" />
+
+		<!-- Twitter card -->
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@Hidegon_" />
+
+		<!-- CSS -->
+		<style type="text/css">
+			body {
+				text-align: center;
+				user-select: none;
+			}
+
+			.hide {
+				display: none;
+			}
+
+			#toggle_mode {
+				padding-top: 2rem;
+				padding-left: 5%;
+				padding-right: 5%;
+			}
+
+			#button_to_code {
+				margin-top: 3em;
+			}
+
+			.grid_ {
+				display: grid;
+				grid-template-columns: repeat(12, 1fr);
+				grid-template-rows: repeat(2, 1fr);
+				grid-column-gap: 0px;
+				grid-row-gap: 0px;
+			}
+
+			#button_to_code > input[type=text], #code_to_button > input[type=text] {
+				margin: 3em 5% 1em 5%;
+				width: 90%;
+				text-align: center;
+			}
+
+			small {
+				position: absolute;
+				bottom: 2px;
+				left: calc(50% - 117.467px / 2);
+			}
+		</style>
+		<link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+		
+	</head>
+
+
+	<body>
+		<div id="toggle_mode" class="grid">
+			<button id="toggle_mode_button_to_code">ボタン → コード</button>
+			<button id="toggle_mode_code_to_button">コード → ボタン</button>
+		</div>
+
+		<!-- Start of button to code -->
+		<div id="button_to_code">
+			<div class="grid_">
+				<label for="button_a">A <input type="checkbox" name="button_a" id="button_a"></label>
+				<label for="button_b">B <input type="checkbox" name="button_b" id="button_b"></label>
+				<label for="button_x">X <input type="checkbox" name="button_x" id="button_x"></label>
+				<label for="button_y">Y <input type="checkbox" name="button_y" id="button_y"></label>
+				<label for="button_l">L <input type="checkbox" name="button_l" id="button_l"></label>
+				<label for="button_r">R <input type="checkbox" name="button_r" id="button_r"></label>
+				<label for="button_zl">ZL <input type="checkbox" name="button_zl" id="button_zl"></label>
+				<label for="button_zr">ZR <input type="checkbox" name="button_zr" id="button_zr"></label>
+				<label for="button_start">Start <input type="checkbox" name="button_start" id="button_start"></label>
+				<label for="button_select">Select <input type="checkbox" name="button_select" id="button_select"></label>
+				<label for="button_touch">Touch <input type="checkbox" name="button_touch" id="button_touch"></label>
+				<div style="visibility: hidden;"></div>
+
+				<label for="button_du">↑ <input type="checkbox" name="button_du" id="button_du"></label>
+				<label for="button_dd">↓ <input type="checkbox" name="button_dd" id="button_dd"></label>
+				<label for="button_dl">← <input type="checkbox" name="button_dl" id="button_dl"></label>
+				<label for="button_dr">→ <input type="checkbox" name="button_dr" id="button_dr"></label>
+				<label for="button_su">SU <input type="checkbox" name="button_su" id="button_su"></label>
+				<label for="button_sd">SD <input type="checkbox" name="button_sd" id="button_sd"></label>
+				<label for="button_sl">SL <input type="checkbox" name="button_sl" id="button_sl"></label>
+				<label for="button_sr">SR <input type="checkbox" name="button_sr" id="button_sr"></label>
+				<label for="button_cu">CU <input type="checkbox" name="button_cu" id="button_cu"></label>
+				<label for="button_cd">CD <input type="checkbox" name="button_cd" id="button_cd"></label>
+				<label for="button_cl">CL <input type="checkbox" name="button_cl" id="button_cl"></label>
+				<label for="button_cr">CR <input type="checkbox" name="button_cr" id="button_cr"></label>
+			</div>
+
+			<input type="text" id="button_to_code_output" placeholder="00000000">
+		</div>
+		<!-- End of button to code -->
+
+		<!-- Start of code to button -->
+		<div id="code_to_button" class="hide">
+			<input type="text" id="code_to_button_input" placeholder="00000003" maxlength="8" pattern="^[0-9A-Za-z]+$">
+			<div style="text-align: center; margin-top: 2em;">↓</div>
+			<input type="text" id="code_to_button_output" placeholder="A + B">
+		</div>
+		<!-- End of code to button -->
+
+		<small>&copy;2022&nbsp;Hidegon</small>
+	</body>
+
+
+	<script language="javascript" type="text/javascript">
+
+		function set_max_length(elm, length) {
+			if (elm.value.length > elm.maxLength) {
+				elm.value = elm.value.slice(0, elm.maxLength);
+			}
+		}
+
+
+		function zfill(num, length) {
+			return ('0000000000' + num).slice(-length);
+		}
+
+
+		function code_to_button(code) {
+			var keys_text = ["A", "B", "Select", "Start", "Right", "Left", "Up", "Down", "R", "L", "X", "Y", "", "", "ZL", "ZR", "", "", "", "", "Touch", "", "", "", "SR", "SL", "SU", "SD", "CR", "CL", "CU", "CD"];
+			var ret = "";
+			var plus = false;
+
+			for (var i = 0; i < 32; i++) {
+				if (code & (1 << i)) {
+					var key = keys_text[i];
+					if (!key) continue;
+					if (plus) ret += " + ";
+					ret += key;
+					plus = true;
+				}
+			}
+
+			return ret;
+		}
+
+
+		function code_to_button_cb() {
+			var code = document.getElementById("code_to_button_input").value;
+
+			if (/^[0-9a-f]+$/i.test(code)) {
+				document.getElementById("code_to_button_output").value = code_to_button(parseInt(code, 16));
+			}
+			else {
+				document.getElementById("code_to_button_output").value = "";
+			}
+		}
+
+
+		function button_to_code_cb() {
+			var output = 0;
+
+			var codes = [
+				0x80000000,	// CD
+				0x40000000,	// CU
+				0x20000000,	// CL
+				0x10000000,	// CR
+				0x8000000,	// SD
+				0x4000000,	// SU
+				0x2000000,	// SL
+				0x1000000,	// SR
+				0x100000,	// Touch
+				0x8000,		// ZR
+				0x4000,		// ZL
+				0x800,		// Y
+				0x400,		// X
+				0x200,		// L
+				0x100,		// R
+				0x80,		// ↓
+				0x40,		// ↑
+				0x20,		// ←
+				0x10,		// →
+				0x8,		// Start
+				0x4,		// Select
+				0x2,		// B
+				0x1,		// A
+			];
+
+			var buttons = [
+				"cd",
+				"cu",
+				"cl",
+				"cr",
+				"sd",
+				"su",
+				"sl",
+				"sr",
+				"touch",
+				"zr",
+				"zl",
+				"y",
+				"x",
+				"l",
+				"r",
+				"dd",
+				"du",
+				"dl",
+				"dr",
+				"start",
+				"select",
+				"b",
+				"a",
+			];
+
+			for (var i = 0; i < buttons.length; i++) {
+				if (document.getElementById("button_" + buttons[i]).checked) output += codes[i];
+			}
+
+			document.getElementById("button_to_code_output").value = zfill(output.toString(16), 8);
+		}
+
+
+		document.getElementById("toggle_mode_button_to_code").addEventListener("click", function() {
+			document.getElementById("button_to_code").classList.remove("hide");
+			document.getElementById("code_to_button").classList.add("hide");
+		});
+
+		document.getElementById("toggle_mode_code_to_button").addEventListener("click", function() {
+			document.getElementById("button_to_code").classList.add("hide");
+			document.getElementById("code_to_button").classList.remove("hide");
+		});
+
+		var buttons = document.getElementsByClassName("button_to_code_btn");
+		for (var i = 0; i < buttons.length; i++) { buttons[i].checked = false; }
+		document.getElementById("button_to_code").addEventListener("click", button_to_code_cb);
+
+		var code_to_button_input = document.getElementById("code_to_button_input");
+		code_to_button_input.addEventListener("input", code_to_button_cb);
+		set_max_length(code_to_button_input, 8);
+	</script>
+</html>
+
+
+<!-- (C) 2022 Hidegon -->
+<!-- This file is part of  -->
