@@ -618,21 +618,21 @@ function delete_all_cookies() {
 
 // Thanks: https://stackoverflow.com/questions/3410464/how-to-find-indices-of-all-occurrences-of-one-string-in-another-in-javascript
 // indexOf all
-function get_indices_of(searchStr, str, case_sensitive) {
+function get_indices_of(search_str, str, case_sensitive) {
 	"use strict";
-	var searchStrLen = searchStr.length;
+	var search_strLen = search_str.length;
 
-	if (searchStrLen == 0) {
+	if (search_strLen == 0) {
 		return [];
 	}
-	var startIndex = 0, index, indices = [];
+	var start_index = 0, index, indices = [];
 	if (!case_sensitive) {
 		str = str.toLowerCase();
-		searchStr = searchStr.toLowerCase();
+		search_str = search_str.toLowerCase();
 	}
-	while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+	while ((index = str.indexOf(search_str, start_index)) > -1) {
 		indices.push(index);
-		startIndex = index + searchStrLen;
+		start_index = index + search_strLen;
 	}
 
 	return indices;
@@ -2117,14 +2117,14 @@ item_origin_inp.addEventListener("change", function() {
 })
 
 // Text
-item_str_inp.addEventListener("change", function() {
+item_str_inp.addEventListener("input", function() {
 	"use strict";
 	g_items[g_selecting_index][1][3] = get_value("item_text");
 	update();
 })
 
 // X
-item_x_inp.addEventListener("change", function() {
+item_x_inp.addEventListener("input", function() {
 	"use strict";
 	var type = g_items[g_selecting_index][0];
 	var value = parseInt(get_value("item_x"));
@@ -2143,7 +2143,7 @@ item_x_inp.addEventListener("change", function() {
 });
 
 // Y
-item_y_inp.addEventListener("change", function() {
+item_y_inp.addEventListener("input", function() {
 	"use strict";
 	var type = g_items[g_selecting_index][0];
 	var value = parseInt(get_value("item_y"));
@@ -2162,7 +2162,7 @@ item_y_inp.addEventListener("change", function() {
 });
 
 // X2
-item_x2_inp.addEventListener("change", function() {
+item_x2_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_x2"));
 	if (isNaN(value) || value < 0) {
@@ -2174,7 +2174,7 @@ item_x2_inp.addEventListener("change", function() {
 });
 
 // Y2
-item_y2_inp.addEventListener("change", function() {
+item_y2_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_y2"));
 	if (isNaN(value) || value < 0) {
@@ -2186,7 +2186,7 @@ item_y2_inp.addEventListener("change", function() {
 });
 
 // Width
-item_width_inp.addEventListener("change", function() {
+item_width_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_width"));
 	if (isNaN(value) || value < 0) {
@@ -2198,7 +2198,7 @@ item_width_inp.addEventListener("change", function() {
 });
 
 // Height
-item_height_inp.addEventListener("change", function() {
+item_height_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_height"));
 	if (isNaN(value) || value < 0) {
@@ -2210,7 +2210,7 @@ item_height_inp.addEventListener("change", function() {
 });
 
 // Border Width
-item_border_width_inp.addEventListener("change", function() {
+item_border_width_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_border_width"));
 	if (isNaN(value) || value < 0) {
@@ -2222,7 +2222,7 @@ item_border_width_inp.addEventListener("change", function() {
 });
 
 // Padding
-item_padding_inp.addEventListener("change", function() {
+item_padding_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_padding"));
 	if (isNaN(value) || value < 0) {
@@ -2234,7 +2234,7 @@ item_padding_inp.addEventListener("change", function() {
 });
 
 // Radius Start
-item_radius_start_inp.addEventListener("change", function() {
+item_radius_start_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_radius_start"));
 	var end = parseInt(get_value("item_radius_end"));
@@ -2250,7 +2250,7 @@ item_radius_start_inp.addEventListener("change", function() {
 });
 
 // Radius End
-item_radius_end_inp.addEventListener("change", function() {
+item_radius_end_inp.addEventListener("input", function() {
 	"use strict";
 	var start = parseInt(get_value("item_radius_start"));
 	var value = parseInt(get_value("item_radius_end"));
@@ -2266,7 +2266,7 @@ item_radius_end_inp.addEventListener("change", function() {
 });
 
 // Arc Start
-item_arc_start_inp.addEventListener("change", function() {
+item_arc_start_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_arc_start"));
 	if (isNaN(value)) {
@@ -2278,7 +2278,7 @@ item_arc_start_inp.addEventListener("change", function() {
 });
 
 // Arc End
-item_arc_end_inp.addEventListener("change", function() {
+item_arc_end_inp.addEventListener("input", function() {
 	"use strict";
 	var value = parseInt(get_value("item_arc_end"));
 	if (isNaN(value)) {
@@ -2379,7 +2379,7 @@ item_filled_inp.addEventListener("change", function() {
 });
 
 // Comment
-item_comment_inp.addEventListener("change", function() {
+item_comment_inp.addEventListener("input", function() {
 	"use strict";
 	g_items[g_selecting_index][1][2] = get_value("item_comment");
 	update();
