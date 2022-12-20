@@ -2413,8 +2413,9 @@ function get_cursor_position(canvas, event) {
 }
 
 // 上画面
-top_screen.addEventListener("click", function(e) {
+function click_move_top_event(e) {
 	"use strict";
+	if (e.type == "mousemove" && e.buttons != 1) return;
 	if (!g_items[g_selecting_index][1][1]) { // 下画面のアイテムを上画面に移動させる
 		g_items[g_selecting_index][1][1] = true;
 	}
@@ -2440,11 +2441,14 @@ top_screen.addEventListener("click", function(e) {
 	}
 
 	update();
-});
+}
+top_screen.addEventListener("mousemove", click_move_top_event);
+top_screen.addEventListener("click", click_move_top_event);
 
 // 下画面
-bottom_screen.addEventListener("click", function(e) {
+function click_move_bottom_event(e) {
 	"use strict";
+	if (e.type == "mousemove" && e.buttons != 1) return;
 	if (g_items[g_selecting_index][1][1]) { // 上画面のアイテムを下画面に移動させる
 		g_items[g_selecting_index][1][1] = false;
 	}
@@ -2470,7 +2474,9 @@ bottom_screen.addEventListener("click", function(e) {
 	}
 
 	update();
-});
+}
+bottom_screen.addEventListener("click", click_move_bottom_event);
+bottom_screen.addEventListener("mousemove", click_move_bottom_event);
 // タッチ移動 終了
 
 // 描画等 更新
