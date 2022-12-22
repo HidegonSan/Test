@@ -2098,7 +2098,7 @@ item_types_inp.addEventListener("change", function() {
 	}
 	else if (type == "circle") {
 		g_items[g_selecting_index][0] = 5;
-		g_items[g_selecting_index][1] = [show, is_top, comment, x, y, 0, 0, 0, 360, color, 8];
+		g_items[g_selecting_index][1] = [show, is_top, comment, x, y, 0, 1, 0, 360, color, 8];
 	}
 
 	update();
