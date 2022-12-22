@@ -840,6 +840,18 @@ function down_item(index) {
 }
 
 
+// アイテム コピー
+function copy_item(index) {
+	if (0 <= index && index < g_items.length) {
+		var _g_items = JSON.parse(JSON.stringify(g_items)); // Deep copy
+		g_items.splice(index, 0, _g_items[index]);
+		if (index <= g_selecting_index) { // コピー対象が選択中のアイテムより上の場合 選択インデックスを足す
+			g_selecting_index++;
+		}
+	}
+}
+
+
 // アイテム 表示 非表示 切り替え
 function toggle_visibility(index) {
 	"use strict";
@@ -1058,6 +1070,10 @@ function items_select_event() {
 			else if (e.target.className.indexOf("item_remove") != -1) {
 				remove_item(index);
 			}
+			// ITEM COPY
+			else if (e.target.className.indexOf("item_copy") != -1) {
+				copy_item(index);
+			}
 			// ITEM SHOW/HIDE
 			else if (e.target.className.indexOf("item_show") != -1) {
 				toggle_visibility(index);
@@ -1074,7 +1090,7 @@ function update_items() {
 	items.innerHTML = ""; // 一旦空にする
 	items.innerHTML += '<hr><button id="item_add" class="update_">Add Item</button>'; // アイテム追加ボタン
 
-	var template = '<hr><div class="item update_" id="{SELECTING}" title="{COMMENT}" ><button class="item_up item_ignore update_" >↑</button><button class="item_down item_ignore update_" >↓</button><input class="item_show item_ignore update_" type="checkbox" {SHOW}><button class="item_remove item_ignore update_" ()>🗑</button><div>{CODE}</div></div>'; // アイテム テンプレート
+	var template = '<hr><div class="item update_" id="{SELECTING}" title="{COMMENT}" ><button class="item_up item_ignore update_" >↑</button><button class="item_down item_ignore update_" >↓</button><input class="item_show item_ignore update_" type="checkbox" {SHOW}><button class="item_remove item_ignore update_">🗑</button><button class="item_copy item_ignore update_">⎘</button><div>{CODE}</div></div>'; // アイテム テンプレート
 
 	for (var i=0; i<g_items.length; i++) {
 		var generated_code = g_generated_codes[i]; // 生成済みコード
