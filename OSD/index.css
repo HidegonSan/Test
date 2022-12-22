@@ -211,14 +211,6 @@ body {
 }
 
 
-/* アイテムエディタ 編集中アイテム クリック移動 */
-/* #item_editor_title span:nth-child(2) {
-	position: absolute;
-	top: 0;
-	right: 0.5em;
-} */
-
-
 /* アイテムエディタ 本体 */
 #item_editor {
 	padding-left: 1em;
@@ -327,7 +319,7 @@ body {
 	position: absolute;
 	top: calc(50% - 8px);
 	margin-left: 0.6em;
-	width: 80%;
+	width: calc(100% - 110px);
 	white-space: nowrap;
 	overflow-x: hidden;
 	text-overflow: ellipsis;
@@ -343,10 +335,19 @@ body {
 }
 
 
-/* アイテム 削除ボタン */
+/* アイテム 削除 ボタン */
 .item_remove {
 	position: absolute;
 	right: 30px;
+	top: 2%;
+	height: 96%;
+}
+
+
+/* アイテム コピー ボタン */
+.item_copy {
+	position: absolute;
+	right: 56px;
 	top: 2%;
 	height: 96%;
 }
