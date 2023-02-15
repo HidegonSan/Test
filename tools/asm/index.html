@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="content-type" charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+		<title>ASM分岐値計算</title>
+		<meta name="author" content="Hidegon" />
+		<meta name="description" content="ARMで分岐命令等を使う時の値を計算します。" />
+
+		<!-- OGP -->
+		<meta property="og:description" content="ARMで分岐命令等を使う時の値を計算します。" />
+		<meta property="og:title" content="ASM分岐値計算" />
+		<meta property="og:url" content="https://hidegonsan.github.io/asm" />
+		<meta property="og:type" content="article" />
+		<meta property="og:site_name" content="ASM分岐値計算" />
+		<meta property="og:locale" content="ja_JP" />
+
+		<!-- Twitter card -->
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:site" content="@Hidegon_" />
+	
+		<!-- font -->
+		<link rel="preconnect" href="https://fonts.gstatic.com" />
+		<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@900&display=swap" rel="stylesheet" />
+
+		<style type="text/css">
+
+			body {
+				background-color: #000;
+				font-family: 'M PLUS Rounded 1c', sans-serif;
+				text-align: center;
+				height: 800px;
+				position: relative;
+				font-size: 20;
+			}
+
+			.po {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				margin: auto;
+				width: 350px;
+				height: 200px;
+				color: #1F1;
+				font-size: 1.2em;
+			}
+
+			.button {
+				font-family: inherit;
+				font-size: 1.4em;
+				font-weight: bold;
+				padding: 5px 20px;
+				border: 1px solid #1F1;
+				background-color: #000;
+				-moz-border-radius: 5px;
+				-webkit-border-radius: 5px;
+				border-radius: 5px;
+				outline: none;
+				color: #1F1;
+			}
+
+			.box {
+				padding: 5px 5px;
+				font-weight: bold;
+				border: 1px solid #1F1;
+				border-radius: 3px;
+				outline: 0;
+				background-color: #000;
+				caret-color: #1F1;
+				color: #1F1;
+				text-align: center;
+			}
+
+			.p {
+				font-size: 1.5em;
+				width: 350;
+				color: #1F1;
+			}
+
+		</style>
+	</head>
+
+
+	<body>
+		<div class="po">
+			<p>分岐元のアドレスを入力<br/><input type="text" size="15" id="base" class="box" maxlength="8" pattern="^[0-9A-Za-z]+$" required placeholder="00000000"></p>
+			<p>分岐先のアドレスを入力<br/><input type="text" size="15" id="branch" class="box" maxlength="8" pattern="^[0-9A-Za-z]+$" required placeholder="00000000"></p>
+
+			<input type="button" onclick="bcalc()" value="計算" class="button">
+			<input type="button" id="copy" onclick="copyResult()" value="コピー" class="button">
+			<p>分岐値<p id="outputValue" class="p"></p></p>
+			<p>コード<p id="outputCode" class="p"></p></p>
+		</div>
+	</body>
+
+
+	<script language="javascript" type="text/javascript">
+
+		function zfill(num, length) {
+			return ('0000000000' + num).slice(-length);
+		}
+
+		function copy(string) {
+			var tmp = document.createElement("div");
+			var pre = document.createElement('pre');
+			pre.style.webkitUserSelect = 'auto';
+			pre.style.userSelect = 'auto';
+			tmp.appendChild(pre).textContent = string;
+			var s = tmp.style;
+			s.position = 'fixed';
+			s.right = '200%';
+			document.body.appendChild(tmp);
+			document.getSelection().selectAllChildren(tmp);
+			var result = document.execCommand("copy");
+			document.body.removeChild(tmp);
+			return result;
+		}
+
+		const copyResult = () => {
+			var base = zfill(document.getElementById("base").value, 8);
+			var branch = zfill(document.getElementById("branch").value, 8);
+			var outputVal = zfill(document.getElementById("outputValue").innerHTML, 8);
+			var outputCode = document.getElementById("outputCode").innerHTML;
+			if (base != "" && branch != "" && outputVal != "" && outputCode != "") {
+				var res = `分岐元: ${base}\n分岐先: ${branch}\n分岐値: ${outputVal}\nコード\n${outputCode.replace(/<br>/g, '\n').replace('        ...       \n', '')}`;
+				copy(res);
+			}
+		}
+
+		const bcalc = () => {
+
+			var base = document.getElementById("base").value;
+			var branch = document.getElementById("branch").value;
+
+			try {
+				base = parseInt(base, 16);
+				branch = parseInt(branch, 16);
+			} catch {
+				var chk = true;
+			}
+
+			if (chk || base >= branch || isNaN(base) || isNaN(branch) || base <= 100000 || base + 8 > branch || base >= 0xFFFFFFFF || branch >= 0xFFFFFFFF) {
+				document.getElementById("outputValue").innerHTML = "エラー";
+				document.getElementById("outputCode").innerHTML = "エラー";
+				return;
+			}
+
+			var ret = zfill((Math.floor((branch - base) / 4) - 2).toString(16).toUpperCase(), 8);
+			document.getElementById("outputValue").innerHTML = ret;
+			var code = `${zfill(base.toString(16), 8)} EB${zfill(ret, 6)}<br/>${zfill(branch.toString(16), 8)} XXXXXXXX<br/>        ...       <br/>XXXXXXXX E12FFF1E`;
+			document.getElementById("outputCode").innerHTML = code;
+		}
+	</script>
+
+</html>
+
+
+<!-- (C) 2022 Hidegon -->
+<!-- This file is part of https://github.com/HidegonSan/HidegonSan.github.io -->

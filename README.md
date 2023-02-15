@@ -1,10 +1,3 @@
-### Welcome to HidegonSan.github.io !
-[Main Page](https://hidegonsan.github.io)  
-[Answordle](https://hidegonsan.github.io/Answordle/)  
-[CTRPF Background Converter](https://hidegonsan.github.io/BMP/)  
-[OSD Designer](https://hidegonsan.github.io/OSD/)  
-[Action Replay Tree Viewer](https://hidegonsan.github.io/ar-tree/)  
-[Calc ASM Branch value Tool](https://hidegonsan.github.io/asm/)  
-[Button Analysis Tool](https://hidegonsan.github.io/button/)  
-[Enshukaku](https://hidegonsan.github.io/enshukaku/)  
-[Lovely Test](https://hidegonsan.github.io/lovely/)  
+# Welcome to HidegonSan.github.io
+
+[HidegonSan.github.io](https://hidegonsan.github.io/)
