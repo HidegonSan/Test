@@ -21,6 +21,11 @@
 
 個人情報については、[プライバシーポリシー](/privacy/)をご覧ください。
 
+## 著作権
+
+本サイトのコンテンツは特記がない限り、[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.ja)で利用できます。  
+コードは特記がない限り、[MIT License](https://opensource.org/license/mit-license-php/)で利用できます。
+
 ## その他
 
 本規約はいつでも変更でき、それを適用できるものとします。
